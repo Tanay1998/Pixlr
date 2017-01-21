@@ -2,6 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.moto.pixelr">
 
+    <!--This defines your application as using the Moto Mods feature for Play Store filtering.-->
+    <uses-feature android:name="com.motorola.hardware.mods"/>
+
+    <!--This permission allows access to the ModManager for access to Moto Mods information.-->
+    <uses-permission android:name="com.motorola.mod.permission.MOD_ACCESS_INFO" />
+
+    <!--This permission (when granted by the user) allows this Application to access the Raw protocol.-->
+    <uses-permission android:name="com.motorola.mod.permission.RAW_PROTOCOL" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,10 +20,14 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
+    <!--This uses the value from the version.xml file as the Moto Mods Services version.  This is used for future compatibility checks as Moto Mods capabilities expand.-->
+    <meta-data
+        android:name="com.motorola.mod.version"
+        android:value="@integer/moto_mod_services_version" />
 
 </manifest>

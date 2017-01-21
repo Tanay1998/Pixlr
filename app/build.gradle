@@ -5,8 +5,8 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.moto.pixelr"
-        minSdkVersion 21
-        targetSdkVersion 22 // TODO: Target 22 for now so we don't have to deal with handling permissions.
+        minSdkVersion 23
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
