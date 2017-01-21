@@ -1,6 +1,7 @@
 package com.moto.pixelr.utils;
 
 import android.content.Context;
+import com.moto.pixelr.R;
 import com.motorola.mod.ModManager;
 
 /**
@@ -17,8 +18,7 @@ public class MotoModsUtil {
      * values: SUCCESS, SERVICE_MISSING, SERVICE_UPDATING, SERVICE_VERSION_UPDATE_REQUIRED,
      * SERVICE_DISABLED, SERVICE_INVALID.
      */
-    public static boolean isDeviceMotoModReady(Context context) {
-
+    public static String isDeviceMotoModReady(Context context) {
 
         int service = ModManager.isModServicesAvailable(context);
         String status;
@@ -27,23 +27,24 @@ public class MotoModsUtil {
                 status = "";
                 break;
             case ModManager.SERVICE_MISSING:
-                status = getString(R.string.SERVICE_MISSING);
+                status = context.getString(R.string.SERVICE_MISSING);
                 break;
             case ModManager.SERVICE_UPDATING:
-                status = getString(R.string.SERVICE_UPDATING);
+                status = context.getString(R.string.SERVICE_UPDATING);
                 break;
             case ModManager.SERVICE_VERSION_UPDATE_REQUIRED:
-                status = getString(R.string.SERVICE_VERSION_UPDATE_REQUIRED);
+                status = context.getString(R.string.SERVICE_VERSION_UPDATE_REQUIRED);
                 break;
             case ModManager.SERVICE_DISABLED:
-                status = getString(R.string.SERVICE_DISABLED);
+                status = context.getString(R.string.SERVICE_DISABLED);
                 break;
             case ModManager.SERVICE_INVALID:
-                status = getString(R.string.SERVICE_INVALID);
+                status = context.getString(R.string.SERVICE_INVALID);
                 break;
             default:
-                status = getString(R.string.na);
+                status = context.getString(R.string.SERVICE_NOT_AVAILABLE);
                 break;
         }
+        return status;
     }
 }

@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">PixelR</string>
+
+    <!-- description: [Mod service is available] -->
+    <string name="SERVICE_SUCCESS">Moto Mod service is available.</string>
+    <!-- description: [Mod service is missing] -->
+    <string name="SERVICE_MISSING">Moto Mod service is missing.</string>
+    <!-- description: [Mod service is updating] -->
+    <string name="SERVICE_UPDATING">Moto Mod service is updating.</string>
+    <!-- description: [Mod service need be updated] -->
+    <string name="SERVICE_VERSION_UPDATE_REQUIRED">Moto Mod service update required.</string>
+    <!-- description: [Mod service is disabled] -->
+    <string name="SERVICE_DISABLED">Moto Mod service is disabled.</string>
+    <!-- description: [Mod service is invalid] -->
+    <string name="SERVICE_INVALID">Moto Mod service is invalid.</string>
+    <!-- description: [None info] -->
+    <string name="SERVICE_NOT_AVAILABLE">Moto Mod service not available.</string>
+
 </resources>
