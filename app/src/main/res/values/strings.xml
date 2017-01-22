@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">PixelR</string>
+    <string name="app_name">ThemLIGHTS</string>
 
     <!-- description: [Mod service is available] -->
     <string name="SERVICE_SUCCESS">Moto Mod service is available.</string>
