@@ -24,10 +24,35 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/pixel_selector_recycler_view"
+        <LinearLayout
+            android:id="@+id/pixel_selector_recycler_view_container"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/pixel_selector_left_arrow"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/arrow_left"
+                android:visibility="invisible" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/pixel_selector_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp" />
+
+            <ImageView
+                android:id="@+id/pixel_selector_right_arrow"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/arrow_right"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/camera_flash_seek_bar_container"

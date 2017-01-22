@@ -38,6 +38,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -90,12 +91,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private boolean isBlinkyFlashing = false;
 
 	// VIEW VARIABLES
+	private LinearLayoutManager layoutManager;
+	private PixelAdapter pixelAdapter;
 	private Unbinder unbinder;
 
 	// VIEW INJECTION VARIABLES
 	@BindView(R.id.camera_flash_seek_bar) SeekBar flashSeekBar;
 	@BindView(R.id.pixel_selector_recycler_view) RecyclerView pixelRecyclerView;
 	@BindView(R.id.ibCapture) FloatingActionButton ibCapture;
+	@BindView(R.id.pixel_selector_left_arrow) ImageView leftArrow;
+	@BindView(R.id.pixel_selector_right_arrow) ImageView rightArrow;
 
 	// CLICK METHODS
 	@OnClick(R.id.ibCapture)
@@ -325,15 +330,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	private void initView() {
 		initRecyclerView();
+		initScrollListener();
 		initSeekbar();
 	}
 
 	private void initRecyclerView() {
-		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+		layoutManager = new LinearLayoutManager(this);
 		layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		pixelRecyclerView.setHasFixedSize(true);
 		pixelRecyclerView.setLayoutManager(layoutManager);
-		PixelAdapter pixelAdapter = new PixelAdapter(this);
+		pixelAdapter = new PixelAdapter(this);
 		pixelRecyclerView.setAdapter(pixelAdapter);
 	}
 
@@ -348,6 +354,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
 		startService(serviceIntent);
+	}
+
+	private void initScrollListener() {
+
+		pixelRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+				super.onScrollStateChanged(recyclerView, newState);
+			}
+
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+
+				// LEFT ARROW:
+				if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
+					leftArrow.setVisibility(View.INVISIBLE);
+				} else {
+					leftArrow.setVisibility(View.VISIBLE);
+				}
+
+				// RIGHT ARROW:
+				if (layoutManager.findLastCompletelyVisibleItemPosition() == pixelAdapter.getItemCount() - 1) {
+					rightArrow.setVisibility(View.INVISIBLE);
+				} else {
+					rightArrow.setVisibility(View.VISIBLE);
+				}
+			}
+		});
 	}
 
 	/** CAMERA METHODS _________________________________________________________________________ **/
