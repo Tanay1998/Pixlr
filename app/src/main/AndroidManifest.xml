@@ -3,7 +3,10 @@
     package="com.moto.pixelr">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+
     <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.flash" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <!--This defines your application as using the Moto Mods feature for Play Store filtering.-->
@@ -23,7 +26,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:screenOrientation="portrait">
 
             <!--<intent-filter>-->
@@ -35,36 +38,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-        </activity>
-
-        <activity
-            android:name=".activity.LauncherActivity"
-            android:screenOrientation="portrait">
-
-            <!--<intent-filter>-->
-                <!--<action android:name="com.moto.pixelr.LAUNCHER"/>-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--</intent-filter>-->
-
-        </activity>
-
-        <activity
-            android:name=".activity.PixelrActivity"
-            android:screenOrientation="portrait">
-
-            <intent-filter>
-                <action android:name="com.moto.pixelr.PIXEL"/>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
-
-        <activity android:name=".SelectorActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
 
         </activity>
 

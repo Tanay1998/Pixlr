@@ -26,7 +26,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.moto.pixelr;
+package com.moto.pixelr.activity;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -58,6 +58,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.moto.pixelr.Constants;
+import com.moto.pixelr.R;
 import com.moto.pixelr.mods.FirmwarePersonality;
 import com.moto.pixelr.mods.Personality;
 import com.moto.pixelr.raw.RawPersonalityService;

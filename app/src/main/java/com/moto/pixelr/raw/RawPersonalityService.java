@@ -42,7 +42,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.moto.pixelr.Constants;
-import com.moto.pixelr.MotoActivity;
+import com.moto.pixelr.activity.MotoActivity;
 import com.moto.pixelr.mods.Personality;
 import com.moto.pixelr.R;
 import com.motorola.mod.ModDevice;

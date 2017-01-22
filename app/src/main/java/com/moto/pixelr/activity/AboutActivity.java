@@ -26,7 +26,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.moto.pixelr;
+package com.moto.pixelr.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -35,6 +35,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.moto.pixelr.BuildConfig;
+import com.moto.pixelr.R;
 import com.motorola.mod.ModManager;
 
 import java.io.ByteArrayOutputStream;
