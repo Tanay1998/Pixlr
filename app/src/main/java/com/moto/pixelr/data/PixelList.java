@@ -16,6 +16,8 @@ public class PixelList {
         List<Pixel> pixelList = new LinkedList<>();
 
         // Adds the pixel options here.
+	    pixelList.add(new Pixel(R.drawable.black, "No Flash"));
+	    pixelList.add(new Pixel(R.drawable.brite, "White"));
         pixelList.add(new Pixel(R.drawable.pacman, "Emoji"));
         pixelList.add(new Pixel(R.drawable.holiday, "Holiday"));
         pixelList.add(new Pixel(R.drawable.sephia, "Sephia"));
