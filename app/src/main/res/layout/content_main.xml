@@ -25,21 +25,25 @@
 	OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 	ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="?android:dividerHorizontal"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
+        android:id="@+id/content_view"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="?android:attr/colorPrimary"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:popupTheme="@style/AppTheme.PopupOverlay" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <include layout="@layout/content_main" />
+        <include layout="@layout/card_general_info" />
 
-</LinearLayout>
+        <include layout="@layout/card_dip_switch_configuration" />
+
+        <include layout="@layout/card_firmware_update" />
+
+        <include layout="@layout/card_mod_controller" />
+
+        <include layout="@layout/card_external_links" />
+
+    </LinearLayout>
+</ScrollView>

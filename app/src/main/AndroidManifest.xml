@@ -18,17 +18,42 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity">
-
-            <intent-filter>
-                <action android:name="com.moto.pixelr.MAIN"/>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+        <activity
+            android:name=".MotoActivity"
+            android:screenOrientation="portrait">
 
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+                <!--<action android:name="com.moto.pixelr.MAIN"/>-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
             <!--</intent-filter>-->
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".activity.LauncherActivity"
+            android:screenOrientation="portrait">
+
+            <!--<intent-filter>-->
+                <!--<action android:name="com.moto.pixelr.LAUNCHER"/>-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+
+        </activity>
+
+        <activity
+            android:name=".activity.PixelrActivity"
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="com.moto.pixelr.PIXEL"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
         </activity>
 
         <activity android:name=".SelectorActivity">
@@ -36,6 +61,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
     </application>
