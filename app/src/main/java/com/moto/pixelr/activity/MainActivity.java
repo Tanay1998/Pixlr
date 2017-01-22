@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -47,10 +48,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
+
 import com.huhx0015.hxgselib.audio.HXGSEDolbyEffects;
 import com.huhx0015.hxgselib.audio.HXGSEMusicEngine;
 import com.moto.pixelr.constants.Constants;
 import com.moto.pixelr.R;
+import com.moto.pixelr.data.Global;
 import com.moto.pixelr.mods.FirmwarePersonality;
 import com.moto.pixelr.mods.Personality;
 import com.moto.pixelr.raw.RawPersonalityService;
@@ -60,14 +63,18 @@ import com.moto.pixelr.ui.NoSDCard;
 import com.moto.pixelr.ui.PixelAdapter;
 import com.motorola.mod.ModDevice;
 import com.motorola.mod.ModManager;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class MainActivity extends AppCompatActivity implements SensorEventListener
+{
 
-	/** CLASS VARIABLES ________________________________________________________________________ **/
+	/**
+	 * CLASS VARIABLES ________________________________________________________________________
+	 **/
 
 	// AUDIO VARIABLES
 	private String currentSong = "NONE"; // Sets the default song for the activity.
@@ -119,25 +126,36 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private Visualizer mVisualizer;
 
 	// VIEW INJECTION VARIABLES
-	@BindView(R.id.camera_flash_seek_bar) SeekBar flashSeekBar;
-	@BindView(R.id.pixel_selector_recycler_view) RecyclerView pixelRecyclerView;
-	@BindView(R.id.ibCapture) FloatingActionButton ibCapture;
-	@BindView(R.id.pixel_selector_left_arrow) ImageView leftArrow;
-	@BindView(R.id.pixel_selector_right_arrow) ImageView rightArrow;
-	@BindView(R.id.pixel_emoji_container) LinearLayout emojiContainer;
-	@BindView(R.id.pixel_music_container) LinearLayout musicContainer;
+	@BindView(R.id.camera_flash_seek_bar)
+	SeekBar flashSeekBar;
+	@BindView(R.id.pixel_selector_recycler_view)
+	RecyclerView pixelRecyclerView;
+	@BindView(R.id.ibCapture)
+	FloatingActionButton ibCapture;
+	@BindView(R.id.pixel_selector_left_arrow)
+	ImageView leftArrow;
+	@BindView(R.id.pixel_selector_right_arrow)
+	ImageView rightArrow;
+	@BindView(R.id.pixel_emoji_container)
+	LinearLayout emojiContainer;
+	@BindView(R.id.pixel_music_container)
+	LinearLayout musicContainer;
 
 	// CLICK METHODS
 	@OnClick(R.id.ibCapture)
-	public void captureImage() {
+	public void captureImage ()
+	{
 
 		// WRITE STORAGE PERMISSIONS:
-		if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+		{
 
 			// Requests permission for camera.
-			ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 					PERMISSIONS_WRITE_STORAGE_CODE);
-		} else {
+		}
+		else
+		{
 			turnOnFlash(); // TODO: the parameter refers to the type of flash we are using (color combination).
 			// We can use some property of the passed View v and use the same function for all of them
 			mCamera.takePicture(null, null, mPicture);
@@ -145,20 +163,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	}
 
 	@OnClick(R.id.ibVisualizer)
-	public void toggleVisualizer() {
+	public void toggleVisualizer ()
+	{
 
 		// RECORD AUDIO PERMISSIONS:
-		if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
+		{
 
 			// Requests permission for record audio.
-			ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.RECORD_AUDIO },
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
 					PERMISSIONS_RECORD_AUDIO_CODE);
-		} else {
+		}
+		else
+		{
 
-			if (isVisualizerOn) {
+			if (isVisualizerOn)
+			{
 				releaseVisualizer();
 				isVisualizerOn = false;
-			} else {
+			}
+			else
+			{
 				initVisualizer();
 				isVisualizerOn = true;
 			}
@@ -166,68 +191,95 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	}
 
 	@OnClick(R.id.pixel_emoji_icon_1)
-	public void displayEmojiIcon1() {
-		sendPixelCode(2); // TODO: Change code later.
+	public void displayEmojiIcon1 ()
+	{
+		Global.cmd_key = 1;
+		Global.info = new byte[]{(byte) (2)};
+		sendPixelCode(); // TODO: Change code later.
 	}
 
 	@OnClick(R.id.pixel_emoji_icon_2)
-	public void displayEmojiIcon2() {
-		sendPixelCode(2); // TODO: Change code later.
+	public void displayEmojiIcon2 ()
+	{
+		Global.cmd_key = 1;
+		Global.info = new byte[]{(byte) (2)};
+		sendPixelCode(); // TODO: Change code later.
 	}
 
 	@OnClick(R.id.pixel_emoji_icon_3)
-	public void displayEmojiIcon3() {
-		sendPixelCode(2); // TODO: Change code later.
+	public void displayEmojiIcon3 ()
+	{
+		Global.cmd_key = 1;
+		Global.info = new byte[]{(byte) (2)};
+		sendPixelCode(); // TODO: Change code later.
 	}
 
 	@OnClick(R.id.pixel_emoji_icon_4)
-	public void displayEmojiIcon4() {
-		sendPixelCode(2); // TODO: Change code later.
+	public void displayEmojiIcon4 ()
+	{
+		Global.cmd_key = 1;
+		Global.info = new byte[]{(byte) (2)};
+		sendPixelCode(); // TODO: Change code later.
 	}
 
 	@OnClick(R.id.pixel_music_1_container)
-	public void playMusic1() {
+	public void playMusic1 ()
+	{
 		currentSong = "AllOfTheLights";
 		HXGSEMusicEngine.getInstance().playSongName(currentSong, true, this);
 		isPlaying = true;
 	}
 
 	@OnClick(R.id.pixel_music_2_container)
-	public void playMusic2() {
+	public void playMusic2 ()
+	{
 		currentSong = "SONG 1";
 		HXGSEMusicEngine.getInstance().playSongName(currentSong, true, this);
 		isPlaying = true;
 	}
 
 	@OnClick(R.id.pixel_music_3_container)
-	public void playMusic3() {
+	public void playMusic3 ()
+	{
 		currentSong = "SONG 2";
 		HXGSEMusicEngine.getInstance().playSongName(currentSong, true, this);
 		isPlaying = true;
 	}
 
 	@OnClick(R.id.moto_command_button_1)
-	public void sendCommand1() {
-		sendPixelCode(100);
+	public void sendCommand1 ()
+	{
+		Global.cmd_key = 1;
+		Global.info = new byte[]{(byte) (100)};
+		sendPixelCode();
 	}
 
 	@OnClick(R.id.moto_command_button_2)
-	public void sendCommand2() {
-		sendPixelCode(101);
+	public void sendCommand2 ()
+	{
+		Global.cmd_key = 1;
+		Global.info = new byte[]{(byte) (101)};
+		sendPixelCode();
 	}
 
 	@OnClick(R.id.moto_command_button_3)
-	public void sendCommand3() {
-		sendPixelCode(102);
+	public void sendCommand3 ()
+	{
+		Global.cmd_key = 1;
+		Global.info = new byte[]{(byte) (101)};
+		sendPixelCode();
 	}
 
 	/**
 	 * Handler for events from mod device
 	 */
-	private Handler handler = new Handler() {
+	private Handler handler = new Handler()
+	{
 		@TargetApi(Build.VERSION_CODES.M)
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
+		public void handleMessage (Message msg)
+		{
+			switch (msg.what)
+			{
 				case Personality.MSG_MOD_DEVICE:
 					/** Mod attach/detach */
 					ModDevice device = fwPersonality.getModDevice();
@@ -252,24 +304,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	/**
 	 * Bind to the background service
 	 */
-	private ServiceConnection mConnection = new ServiceConnection() {
-		public void onServiceConnected(ComponentName className, IBinder service) {
+	private ServiceConnection mConnection = new ServiceConnection()
+	{
+		public void onServiceConnected (ComponentName className, IBinder service)
+		{
 			rawService = ((RawPersonalityService.LocalBinder) service).getService();
-			if (rawService != null) {
+			if (rawService != null)
+			{
 				rawService.registerListener(handler);
 				rawService.checkRawInterface();
 			}
 		}
 
-		public void onServiceDisconnected(ComponentName className) {
+		public void onServiceDisconnected (ComponentName className)
+		{
 			rawService = null;
 		}
 	};
 
-	/** ACTIVITY LIFECYCLE METHODS _____________________________________________________________ **/
+	/**
+	 * ACTIVITY LIFECYCLE METHODS _____________________________________________________________
+	 **/
 
 	@Override
-	public void onCreate (Bundle savedInstanceState) {
+	public void onCreate (Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		unbinder = ButterKnife.bind(this);
@@ -290,32 +349,38 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	}
 
 	@Override
-	protected void onResume () {
+	protected void onResume ()
+	{
 		super.onResume();
 
 		initPersonality();
 
 		// Test if there is a camera on the device and if the SD card is
 		// mounted.
-		if (!checkCameraHardware(this)) {
+		if (!checkCameraHardware(this))
+		{
 			Intent i = new Intent(this, NoCamera.class);
 			startActivity(i);
 			finish();
 		}
 
-		else if (!checkSDCard()) {
+		else if (!checkSDCard())
+		{
 			Intent i = new Intent(this, NoSDCard.class);
 			startActivity(i);
 			finish();
 		}
 
 		// CAMERA PERMISSIONS:
-		if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+		{
 
 			// Requests permission for camera.
-			ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.CAMERA },
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
 					PERMISSIONS_CAMERA_REQUEST_CODE);
-		} else {
+		}
+		else
+		{
 			// Creating the camera.
 			createCamera();
 		}
@@ -324,13 +389,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
 
 		// Resumes audio playback if music was playing in the background.
-		if (isPlaying) {
+		if (isPlaying)
+		{
 			HXGSEMusicEngine.getInstance().playSongName(currentSong, true, this);
 		}
 	}
 
 	@Override
-	protected void onPause () {
+	protected void onPause ()
+	{
 		super.onPause();
 
 		HXGSEMusicEngine.getInstance().pauseSong(); // Pauses any song that is playing in the background.
@@ -345,7 +412,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	}
 
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy ()
+	{
 		super.onDestroy();
 		unbinder.unbind();
 		releasePersonality();
@@ -356,9 +424,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		HXGSEDolbyEffects.getInstance().releaseDolbyEffects();
 	}
 
-	/** INITIALIZATION METHODS _________________________________________________________________ **/
+	/**
+	 * INITIALIZATION METHODS _________________________________________________________________
+	 **/
 
-	private void initDisplay() {
+	private void initDisplay ()
+	{
 
 		// Selecting the resolution of the Android device so we can create a
 		// proportional preview
@@ -366,13 +437,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		deviceHeight = display.getHeight();
 	}
 
-	private void initView() {
+	private void initView ()
+	{
 		initRecyclerView();
 		initScrollListener();
 		initSeekbar();
 	}
 
-	private void initRecyclerView() {
+	private void initRecyclerView ()
+	{
 		layoutManager = new LinearLayoutManager(this);
 		layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		pixelRecyclerView.setHasFixedSize(true);
@@ -381,66 +454,91 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		pixelRecyclerView.setAdapter(pixelAdapter);
 	}
 
-	private void initSeekbar() {
+	private void initSeekbar ()
+	{
 		flashSeekBar.setProgress(50); // Sets the progress bar at 50%.
 	}
 
-	/** Call RawPersonalityService to toggle LED */
-	private void initService() {
+	/**
+	 * Call RawPersonalityService to toggle LED
+	 */
+	private void initService ()
+	{
 		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
 		startService(serviceIntent);
 	}
 
-	private void initScrollListener() {
+	private void initScrollListener ()
+	{
 
-		pixelRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+		pixelRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+		{
 			@Override
-			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+			public void onScrollStateChanged (RecyclerView recyclerView, int newState)
+			{
 				super.onScrollStateChanged(recyclerView, newState);
 			}
 
 			@Override
-			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+			public void onScrolled (RecyclerView recyclerView, int dx, int dy)
+			{
 				super.onScrolled(recyclerView, dx, dy);
 
 				// LEFT ARROW:
-				if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
+				if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0)
+				{
 					leftArrow.setVisibility(View.INVISIBLE);
-				} else {
+				}
+				else
+				{
 					leftArrow.setVisibility(View.VISIBLE);
 				}
 
 				// RIGHT ARROW:
-				if (layoutManager.findLastCompletelyVisibleItemPosition() == pixelAdapter.getItemCount() - 1) {
+				if (layoutManager.findLastCompletelyVisibleItemPosition() == pixelAdapter.getItemCount() - 1)
+				{
 					rightArrow.setVisibility(View.INVISIBLE);
-				} else {
+				}
+				else
+				{
 					rightArrow.setVisibility(View.VISIBLE);
 				}
 			}
 		});
 	}
 
-	public void displayEmojiOptions(boolean isShow) {
+	public void displayEmojiOptions (boolean isShow)
+	{
 
-		if (isShow) {
+		if (isShow)
+		{
 			emojiContainer.setVisibility(View.VISIBLE);
-		} else {
+		}
+		else
+		{
 			emojiContainer.setVisibility(View.GONE);
 		}
 	}
 
-	public void displayMusicOptions(boolean isShow) {
+	public void displayMusicOptions (boolean isShow)
+	{
 
-		if (isShow) {
+		if (isShow)
+		{
 			musicContainer.setVisibility(View.VISIBLE);
-		} else {
+		}
+		else
+		{
 			musicContainer.setVisibility(View.GONE);
 		}
 	}
 
-	/** CAMERA METHODS _________________________________________________________________________ **/
+	/**
+	 * CAMERA METHODS _________________________________________________________________________
+	 **/
 
-	private void createCamera () {
+	private void createCamera ()
+	{
 		// Create an instance of Camera
 		mCamera = getCameraInstance();
 
@@ -454,7 +552,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		// Needed to determine maximum size supported by camera phone.
 		List<Camera.Size> allSizes = params.getSupportedPictureSizes();
 		Camera.Size size = allSizes.get(0); // get top size
-		for (int i = 0; i < allSizes.size(); i++) {
+		for (int i = 0; i < allSizes.size(); i++)
+		{
 			if (allSizes.get(i).width > size.width)
 				size = allSizes.get(i);
 		}
@@ -483,8 +582,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		preview.addView(mPreview);
 	}
 
-	private void releaseCamera () {
-		if (mCamera != null) {
+	private void releaseCamera ()
+	{
+		if (mCamera != null)
+		{
 			mCamera.release(); // release the camera for other applications
 			mCamera = null;
 		}
@@ -493,11 +594,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	/**
 	 * Check if this device has a camera
 	 */
-	private boolean checkCameraHardware (Context context) {
-		if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+	private boolean checkCameraHardware (Context context)
+	{
+		if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA))
+		{
 			// this device has a camera
 			return true;
-		} else {
+		}
+		else
+		{
 			// no camera on this device
 			return false;
 		}
@@ -506,12 +611,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	/**
 	 * A safe way to get an instance of the Camera object.
 	 */
-	public static Camera getCameraInstance () {
+	public static Camera getCameraInstance ()
+	{
 		Camera c = null;
-		try {
+		try
+		{
 			// attempt to get a Camera instance
 			c = Camera.open();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			// Camera is not available (in use or does not exist)
 			Log.e(MainActivity.class.getSimpleName(), "getCameraInstance(): Camera instance was null.");
 		}
@@ -520,39 +629,47 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		return c;
 	}
 
-	public void turnOnFlash () {
+	public void turnOnFlash ()
+	{
 		// Code to turn on Flash using flashType
 	}
 
-	public void turnOffFlash () {
+	public void turnOffFlash ()
+	{
 		// Code to turn off Flash
 	}
 
-	public void toggleFlash (View v) {
+	public void toggleFlash (View v)
+	{
 		isFlashOn = !isFlashOn;
-		if (isFlashOn) {
+		if (isFlashOn)
+		{
 			Camera.Parameters p = mCamera.getParameters();
 			p.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
 			mCamera.setParameters(p);
 		}
 
-		else {
+		else
+		{
 			Camera.Parameters p = mCamera.getParameters();
 			p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
 			mCamera.setParameters(p);
 		}
 	}
 
-	private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
+	private Camera.PictureCallback mPicture = new Camera.PictureCallback()
+	{
 
 		@Override
-		public void onPictureTaken (byte[] data, Camera camera) {
+		public void onPictureTaken (byte[] data, Camera camera)
+		{
 
 			turnOffFlash();
 
 			File pictureFileDir = getDir();
 
-			if (!pictureFileDir.exists() && !pictureFileDir.mkdirs()) {
+			if (!pictureFileDir.exists() && !pictureFileDir.mkdirs())
+			{
 				Log.e(MainActivity.class.getSimpleName(), "Can't create directory to save image.");
 				Toast.makeText(MainActivity.this, "Can't create directory to save image.",
 						Toast.LENGTH_LONG).show();
@@ -567,13 +684,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 			File pictureFile = new File(filename);
 
-			try {
+			try
+			{
 				FileOutputStream fos = new FileOutputStream(pictureFile);
 				fos.write(data);
 				fos.close();
 				Toast.makeText(MainActivity.this, "New Image saved:" + photoFile,
 						Toast.LENGTH_LONG).show();
-			} catch (Exception error) {
+			}
+			catch (Exception error)
+			{
 				Log.e(MainActivity.class.getSimpleName(), "File" + filename + "not saved: "
 						+ error.getMessage());
 				Toast.makeText(MainActivity.this, "Image could not be saved.",
@@ -585,15 +705,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		}
 	};
 
-	private File getDir() {
+	private File getDir ()
+	{
 		File sdDir = Environment
 				.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 		return new File(sdDir, getString(R.string.app_name));
 	}
 
-	/** I/O METHODS ____________________________________________________________________________ **/
+	/**
+	 * I/O METHODS ____________________________________________________________________________
+	 **/
 
-	private boolean checkSDCard () {
+	private boolean checkSDCard ()
+	{
 		boolean state = false;
 
 		String sd = Environment.getExternalStorageState();
@@ -609,31 +733,43 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	 * Putting in place a listener so we can get the sensor data only when
 	 * something changes.
 	 */
-	public void onSensorChanged (SensorEvent event) {
+	public void onSensorChanged (SensorEvent event)
+	{
 
-		synchronized (this) {
+		synchronized (this)
+		{
 
-			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+			{
 				RotateAnimation animation = null;
-				if (event.values[0] < 4 && event.values[0] > -4) {
-					if (event.values[1] > 0 && orientation != ExifInterface.ORIENTATION_ROTATE_90) {
+				if (event.values[0] < 4 && event.values[0] > -4)
+				{
+					if (event.values[1] > 0 && orientation != ExifInterface.ORIENTATION_ROTATE_90)
+					{
 						// UP
 						orientation = ExifInterface.ORIENTATION_ROTATE_90;
 						animation = getRotateAnimation(270);
 						degrees = 270;
-					} else if (event.values[1] < 0 && orientation != ExifInterface.ORIENTATION_ROTATE_270) {
+					}
+					else if (event.values[1] < 0 && orientation != ExifInterface.ORIENTATION_ROTATE_270)
+					{
 						// UP SIDE DOWN
 						orientation = ExifInterface.ORIENTATION_ROTATE_270;
 						animation = getRotateAnimation(90);
 						degrees = 90;
 					}
-				} else if (event.values[1] < 4 && event.values[1] > -4) {
-					if (event.values[0] > 0 && orientation != ExifInterface.ORIENTATION_NORMAL) {
+				}
+				else if (event.values[1] < 4 && event.values[1] > -4)
+				{
+					if (event.values[0] > 0 && orientation != ExifInterface.ORIENTATION_NORMAL)
+					{
 						// LEFT
 						orientation = ExifInterface.ORIENTATION_NORMAL;
 						animation = getRotateAnimation(0);
-						degrees = 0;}
-					else if (event.values[0] < 0 && orientation != ExifInterface.ORIENTATION_ROTATE_180) {
+						degrees = 0;
+					}
+					else if (event.values[0] < 0 && orientation != ExifInterface.ORIENTATION_ROTATE_180)
+					{
 						// RIGHT
 						orientation = ExifInterface.ORIENTATION_ROTATE_180;
 						animation = getRotateAnimation(180);
@@ -651,16 +787,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	 * @param toDegrees
 	 * @return
 	 */
-	private RotateAnimation getRotateAnimation (float toDegrees) {
+	private RotateAnimation getRotateAnimation (float toDegrees)
+	{
 		float compensation = 0;
 
-		if (Math.abs(degrees - toDegrees) > 180) {
+		if (Math.abs(degrees - toDegrees) > 180)
+		{
 			compensation = 360;
 		}
 
 		// When the device is being held on the left side (default position for
 		// a camera) we need to add, not subtract from the toDegrees.
-		if (toDegrees == 0) {
+		if (toDegrees == 0)
+		{
 			compensation = -compensation;
 		}
 
@@ -678,28 +817,36 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		return animation;
 	}
 
-	/** MOTO MOD METHODS _______________________________________________________________________ **/
+	/**
+	 * MOTO MOD METHODS _______________________________________________________________________
+	 **/
 
-	private void initPersonality() {
-		if (null == fwPersonality) {
+	private void initPersonality ()
+	{
+		if (null == fwPersonality)
+		{
 			fwPersonality = new FirmwarePersonality(this);
 
 			/** Register handler to get event and data update */
 			fwPersonality.registerListener(handler);
 		}
 
-		if (null == rawService) {
+		if (null == rawService)
+		{
 			bindService(new Intent(this, RawPersonalityService.class), mConnection, Context.BIND_AUTO_CREATE);
 		}
 	}
 
-	private void releasePersonality() {
-		if (null != fwPersonality) {
+	private void releasePersonality ()
+	{
+		if (null != fwPersonality)
+		{
 			fwPersonality.onDestroy();
 			fwPersonality = null;
 		}
 
-		if (null != rawService) {
+		if (null != rawService)
+		{
 			unbindService(mConnection);
 			rawService = null;
 		}
@@ -708,15 +855,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	/**
 	 * Mod device attach/detach
 	 */
-	public void onModDevice(ModDevice device) {
+	public void onModDevice (ModDevice device)
+	{
 
 		Log.d(MainActivity.class.getSimpleName(), "onModeDevice() called.");
 
 		/** Request RAW permission for Blinky Personality Card, to create RAW I/O */
-		if (device != null) {
+		if (device != null)
+		{
 			if ((device.getVendorId() == Constants.VID_MDK
 					&& device.getProductId() == Constants.PID_BLINKY)
-					|| device.getVendorId() == Constants.VID_DEVELOPER) {
+					|| device.getVendorId() == Constants.VID_DEVELOPER)
+			{
 
 				Log.d(MainActivity.class.getSimpleName(), "onModeDevice(): Checking raw permissions.");
 
@@ -729,25 +879,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	 * Pre Android 6.0 permission police, need check and ask granting permissions
 	 */
 	@TargetApi(Build.VERSION_CODES.M)
-	public void checkRawPermission() {
+	public void checkRawPermission ()
+	{
 		if (checkSelfPermission(ModManager.PERMISSION_USE_RAW_PROTOCOL)
-				!= PackageManager.PERMISSION_GRANTED) {
+				!= PackageManager.PERMISSION_GRANTED)
+		{
 			handler.sendEmptyMessage(Personality.MSG_RAW_REQUEST_PERMISSION);
 		}
 	}
 
-	/** PIXEL METHODS __________________________________________________________________________ **/
+	/**
+	 * PIXEL METHODS __________________________________________________________________________
+	 **/
 
-	public void sendPixelCode(int position) {
+	public void sendPixelCode ()
+	{
 		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
-		serviceIntent.putExtra(RawPersonalityService.BLINKY, position);
-		serviceIntent.putExtra(RawPersonalityService.CMD_KEY, 1);
 		startService(serviceIntent);
 	}
 
-	/** VISUALIZER METHODS _____________________________________________________________________ **/
+	/**
+	 * VISUALIZER METHODS _____________________________________________________________________
+	 **/
 
-	private void initVisualizer() {
+	private void initVisualizer ()
+	{
 
 		// Create the Visualizer object and attach it to our media player.
 		mVisualizer = new Visualizer(0);
@@ -755,12 +911,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		// mVisualizer = new Visualizer(mediaPlayer.getAudioSessionId());
 		mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
 
-		Visualizer.OnDataCaptureListener captureListener = new Visualizer.OnDataCaptureListener() {
+		Visualizer.OnDataCaptureListener captureListener = new Visualizer.OnDataCaptureListener()
+		{
 			@Override
-			public void onWaveFormDataCapture (Visualizer visualizer, byte[] bytes, int samplingRate) {}
+			public void onWaveFormDataCapture (Visualizer visualizer, byte[] bytes, int samplingRate)
+			{
+			}
 
 			@Override
-			public void onFftDataCapture (Visualizer visualizer, byte[] bytes, int samplingRate) {
+			public void onFftDataCapture (Visualizer visualizer, byte[] bytes, int samplingRate)
+			{
 				updateVisualizerFFT(bytes);
 			}
 		};
@@ -769,31 +929,38 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		mVisualizer.setEnabled(true);
 	}
 
-	private void releaseVisualizer() {
-		if (mVisualizer != null) {
+	private void releaseVisualizer ()
+	{
+		if (mVisualizer != null)
+		{
 			mVisualizer.release();
 		}
 
 		// Stops the song that is currently playing in the background.
-		if (HXGSEMusicEngine.getInstance().isSongPlaying()) {
+		if (HXGSEMusicEngine.getInstance().isSongPlaying())
+		{
 			HXGSEMusicEngine.getInstance().stopSong();
 			currentSong = "NONE"; // Indicates no song has been selected.
 		}
 	}
 
-	public void updateVisualizerFFT(byte[] bytes) {
+	public void updateVisualizerFFT (byte[] bytes)
+	{
 		data = bytes;
 		draw();
 	}
 
 	// To use when changing songs
-	public void flash() {
+	public void flash ()
+	{
 		mFlash = true;
 	}
 
-	public void draw () {
+	public void draw ()
+	{
 
-		if (mFlash) {
+		if (mFlash)
+		{
 			mFlash = false;
 			// DRAW FLASH
 		}
@@ -819,19 +986,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				maxPts[id] = (maxPts[id] > mFFTPoints[id]) ? maxPts[id] : mFFTPoints[id];
 			}
 
-			int[] boxes = new int[mDivisions];
+			byte[] boxes = new byte[mDivisions];
 			String s = "";
 			for (int i = 0; i < mDivisions; i++)
 			{
 				mFFTPoints[i] = mFFTPoints[i] * mult[i];
-				boxes[i] = (int) Math.floor((mFFTPoints[i] + 2.5) / 5.0);
+				boxes[i] = (byte) Math.floor((mFFTPoints[i] + 2.5) / 5.0);
 				if (boxes[i] > 5) boxes[i] = 5;
 				if (boxes[i] < 0) boxes[i] = 0;
 				s += String.valueOf(boxes[i]) + " x ";
 			}
 			Log.d("Visualizer Max", s);
 			// DRAW FFT DATA
-
+			Global.cmd_key = 4;
+			Global.info = boxes;
+			sendPixelCode();
 		}
 	}
 
@@ -840,22 +1009,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	/**
 	 * Handler the permission requesting result
 	 */
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+	public void onRequestPermissionsResult (int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+	{
 
 		// RAW PROTOCOL:
-		if (requestCode == PERMISSIONS_RAW_PROTOCOL_CODE && grantResults.length > 0) {
+		if (requestCode == PERMISSIONS_RAW_PROTOCOL_CODE && grantResults.length > 0)
+		{
 
-			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+			{
 				Intent serviceIntent = new Intent(this, RawPersonalityService.class);
 				startService(serviceIntent);
-			} else {
+			}
+			else
+			{
 				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 				alertDialog.setTitle("RAW PROTOCOL Permissions Rejected");
 				alertDialog.setMessage("This app requires RAW PROTOCOL permissions to function.");
-				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener()
+				{
 
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onClick (DialogInterface dialog, int which)
+					{
 						dialog.dismiss();
 					}
 				});
@@ -864,18 +1040,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		}
 
 		// CAMERA PROTOCOL:
-		if (requestCode == PERMISSIONS_CAMERA_REQUEST_CODE && grantResults.length > 0) {
+		if (requestCode == PERMISSIONS_CAMERA_REQUEST_CODE && grantResults.length > 0)
+		{
 
-			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+			{
 				createCamera();
-			} else {
+			}
+			else
+			{
 				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 				alertDialog.setTitle("CAMERA Permissions Rejected");
 				alertDialog.setMessage("This app requires CAMERA permissions to function.");
-				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener()
+				{
 
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onClick (DialogInterface dialog, int which)
+					{
 						dialog.dismiss();
 					}
 				});
@@ -884,18 +1066,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		}
 
 		// RECORD AUDIO:
-		if (requestCode == PERMISSIONS_RECORD_AUDIO_CODE && grantResults.length > 0) {
+		if (requestCode == PERMISSIONS_RECORD_AUDIO_CODE && grantResults.length > 0)
+		{
 
-			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+			{
 				initVisualizer();
-			} else {
+			}
+			else
+			{
 				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 				alertDialog.setTitle("RECORD AUDIO Permissions Rejected");
 				alertDialog.setMessage("This app requires RECORD AUDIO permissions to function.");
-				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener()
+				{
 
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onClick (DialogInterface dialog, int which)
+					{
 						dialog.dismiss();
 					}
 				});
@@ -904,18 +1092,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		}
 
 		// WRITE STORAGE:
-		if (requestCode == PERMISSIONS_WRITE_STORAGE_CODE && grantResults.length > 0) {
+		if (requestCode == PERMISSIONS_WRITE_STORAGE_CODE && grantResults.length > 0)
+		{
 
-			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+			{
 				// TODO: Do nothing, allow user to press photo button again.
-			} else {
+			}
+			else
+			{
 				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 				alertDialog.setTitle("WRITE STORAGE Permissions Rejected");
 				alertDialog.setMessage("This app requires WRITE STORAGE permissions to function.");
-				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener()
+				{
 
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onClick (DialogInterface dialog, int which)
+					{
 						dialog.dismiss();
 					}
 				});
@@ -925,5 +1119,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	}
 
 	@Override
-	public void onAccuracyChanged (Sensor sensor, int accuracy) {}
+	public void onAccuracyChanged (Sensor sensor, int accuracy)
+	{
+	}
 }

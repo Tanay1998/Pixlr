@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.moto.pixelr.R;
 import com.moto.pixelr.activity.MainActivity;
+import com.moto.pixelr.data.Global;
 import com.moto.pixelr.data.PixelList;
 import com.moto.pixelr.model.Pixel;
 import com.squareup.picasso.Picasso;
@@ -60,7 +61,9 @@ public class PixelAdapter extends RecyclerView.Adapter<PixelAdapter.PixelViewHol
                 else {
                     ((MainActivity) context).displayMusicOptions(false);
                     ((MainActivity) context).displayEmojiOptions(false);
-                    ((MainActivity) context).sendPixelCode(position);
+	                Global.cmd_key = 1;
+	                Global.info = new byte[] {(byte)(position + 1)};
+	                ((MainActivity) context).sendPixelCode();
                 }
             }
 
