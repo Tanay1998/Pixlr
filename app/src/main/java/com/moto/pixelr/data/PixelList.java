@@ -17,7 +17,7 @@ public class PixelList {
 
         // Adds the pixel options here.
         pixelList.add(new Pixel(R.drawable.brite, "Brite"));
-        pixelList.add(new Pixel(R.drawable.disco, "Disco"));
+        pixelList.add(new Pixel(R.drawable.newdisco, "Disco"));
         pixelList.add(new Pixel(R.drawable.green, "Green"));
         pixelList.add(new Pixel(R.drawable.hell, "Hell"));
         pixelList.add(new Pixel(R.drawable.holiday, "Holiday"));
@@ -26,6 +26,7 @@ public class PixelList {
         pixelList.add(new Pixel(R.drawable.sephia, "Sephia"));
         pixelList.add(new Pixel(R.drawable.sunlite, "Sunlite"));
         pixelList.add(new Pixel(R.drawable.vogue, "Vogue"));
+        pixelList.add(new Pixel(R.drawable.pacman, "Pac-Man"));
 
         return pixelList;
     }

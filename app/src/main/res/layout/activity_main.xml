@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activity.MainActivity"
     android:id="@+id/main_layout">
@@ -11,8 +12,6 @@
         android:id="@+id/camera_preview"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
         android:background="@android:color/holo_blue_dark">
     </RelativeLayout>
 
@@ -40,7 +39,7 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/pixel_selector_recycler_view"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginLeft="4dp"
@@ -53,6 +52,16 @@
                 android:src="@drawable/arrow_right"/>
 
         </LinearLayout>
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/pixel_music_container"-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+            <!---->
+
+        <!--</LinearLayout>-->
 
         <LinearLayout
             android:id="@+id/camera_flash_seek_bar_container"
@@ -124,8 +133,6 @@
 
     </LinearLayout>
 
-
-
     <android.support.design.widget.FloatingActionButton
         android:layout_gravity="center|bottom"
         android:id="@+id/ibCapture"
@@ -142,7 +149,6 @@
         android:layout_gravity="center|bottom|left"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_weight="1"
         android:onClick="toggleFlash"
         android:text="F"
         android:layout_marginBottom="8dp" />

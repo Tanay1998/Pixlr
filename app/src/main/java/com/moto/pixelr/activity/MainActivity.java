@@ -41,7 +41,6 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import com.moto.pixelr.Constants;
 import com.moto.pixelr.R;
 import com.moto.pixelr.mods.FirmwarePersonality;
@@ -209,20 +208,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					/** Request user to grant RAW protocol permission */
 					requestPermissions(new String[]{ModManager.PERMISSION_USE_RAW_PROTOCOL},
 							REQUEST_RAW_PERMISSION);
-					break;
-				case RawPersonalityService.BLINKY_STATUS:
-					/** The LED light status is changed */
-					Switch led = (Switch) findViewById(R.id.switch_led);
-					if (led != null) {
-						if ((rawService != null) &&
-								rawService.isRawInterfaceReady()) {
-							led.setChecked(rawService.isBlinking());
-							led.setEnabled(true);
-						} else {
-							led.setEnabled(false);
-							led.setChecked(false);
-						}
-					}
 					break;
 				case RawPersonalityService.EXIT_APP:
 					/** Exit main activity UI */
@@ -707,13 +692,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				// TODO: User declined for RAW accessing permission.
 				// You may need pop up a description dialog or other prompts to explain
 				// the app cannot work without the permission granted.
-
-				/** Disable LED control as no RAW permission, to write control command to it */
-				Switch led = (Switch) findViewById(R.id.switch_led);
-				if (led != null) {
-					led.setEnabled(false);
-					led.setChecked(false);
-				}
 			}
 		}
 	}

@@ -18,15 +18,7 @@ public class Pixel {
         return pixelResource;
     }
 
-    public void setPixelResource(int pixelResource) {
-        this.pixelResource = pixelResource;
-    }
-
     public String getPixelDescription() {
         return pixelDescription;
-    }
-
-    public void setPixelDescription(String pixelDescription) {
-        this.pixelDescription = pixelDescription;
     }
 }
