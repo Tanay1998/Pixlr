@@ -6,7 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import android.Manifest;
-import android.annotation.TargetApi;
+import android.annotatio
+n.TargetApi;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -94,6 +95,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private static final String DIRECTORY_PATH = "/DCIM/Camera/";
 	private String fileName;
 
+	// MENU VARIABLES
+	private boolean isDebugMenu = false;
+
 	// MOTO MOD VARIABLES
 	private FirmwarePersonality fwPersonality;
 	private RawPersonalityService rawService;
@@ -121,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	// VIEW INJECTION VARIABLES
 	@BindView(R.id.camera_flash_seek_bar) SeekBar flashSeekBar;
 	@BindView(R.id.pixel_selector_recycler_view) RecyclerView pixelRecyclerView;
+	@BindView(R.id.debug_subcontainer) LinearLayout debugMenuContainer;
 	@BindView(R.id.ibCapture) FloatingActionButton ibCapture;
 	@BindView(R.id.pixel_selector_left_arrow) ImageView leftArrow;
 	@BindView(R.id.pixel_selector_right_arrow) ImageView rightArrow;
@@ -128,6 +133,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	@BindView(R.id.pixel_music_container) LinearLayout musicContainer;
 
 	// CLICK METHODS
+	@OnClick(R.id.ibDebug)
+	public void displayDebugMenu() {
+		if (isDebugMenu) {
+			debugMenuContainer.setVisibility(View.GONE);
+			isDebugMenu = false;
+		} else {
+			debugMenuContainer.setVisibility(View.VISIBLE);
+			isDebugMenu = true;
+		}
+	}
+
 	@OnClick(R.id.ibCapture)
 	public void captureImage() {
 
