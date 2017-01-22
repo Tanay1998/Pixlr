@@ -2,6 +2,7 @@ package com.moto.pixelr.ui;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,8 @@ public class PixelAdapter extends RecyclerView.Adapter<PixelAdapter.PixelViewHol
     private Context context;
     private List<Pixel> pixelList;
 
+    private int currentSelection = -1;
+
     /** CONSTRUCTOR METHODS ____________________________________________________________________ **/
 
     public PixelAdapter(Context context) {
@@ -41,10 +44,37 @@ public class PixelAdapter extends RecyclerView.Adapter<PixelAdapter.PixelViewHol
     @Override
     public PixelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_pixel_row, parent, false);
-        PixelViewHolder viewHolder = new PixelViewHolder(view, new PixelViewHolder.OnViewHolderClickListener() {
+        return new PixelViewHolder(view);
+    }
 
+    @Override
+    public void onBindViewHolder(final PixelViewHolder holder, final int position) {
+
+        int pixelImageResource = pixelList.get(position).getPixelResource();
+        String pixelTextDescription = pixelList.get(position).getPixelDescription();
+
+        // PIXEL IMAGE:
+        Picasso.with(context)
+                .load(pixelImageResource)
+                .into(holder.pixelButton);
+
+        // PIXEL TEXT:
+        holder.pixelText.setText(pixelTextDescription);
+        holder.pixelText.setShadowLayer(4, 2, 2, Color.BLACK);
+
+        // Highlights the text selection.
+        if (currentSelection == position) {
+            holder.pixelText.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        } else {
+            holder.pixelText.setBackground(null);
+        }
+
+        // PIXEL BUTTON:
+        holder.pixelButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPixelClick(View caller, int position) {
+            public void onClick(View v) {
+
+                currentSelection = position;
 
                 // MUSIC:
                 if (position == 7) {
@@ -61,65 +91,31 @@ public class PixelAdapter extends RecyclerView.Adapter<PixelAdapter.PixelViewHol
                 else {
                     ((MainActivity) context).displayMusicOptions(false);
                     ((MainActivity) context).displayEmojiOptions(false);
-	                Global.cmd_key = 1;
-	                Global.info = new byte[] {(byte)(position + 1)};
-	     //           ((MainActivity) context).sendPixelCode();
+                    Global.cmd_key = 1;
+                    Global.info = new byte[] {(byte)(position + 1)};
                 }
+
+                notifyDataSetChanged();
             }
-
         });
-
-        return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(PixelViewHolder holder, int position) {
 
-        int pixelImageResource = pixelList.get(position).getPixelResource();
-        String pixelTextDescription = pixelList.get(position).getPixelDescription();
-
-        // PIXEL IMAGE:
-        Picasso.with(context)
-                .load(pixelImageResource)
-                .into(holder.pixelButton);
-
-        // PIXEL TEXT:
-        holder.pixelText.setText(pixelTextDescription);
-        holder.pixelText.setShadowLayer(4, 2, 2, Color.BLACK);
-    }
-
-    @Override
     public int getItemCount() {
         return pixelList.size();
     }
 
     /** SUBCLASSES _____________________________________________________________________________ **/
 
-    public static class PixelViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class PixelViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.pixel_icon) ImageView pixelButton;
         @BindView(R.id.pixel_description_text) TextView pixelText;
 
-        public OnViewHolderClickListener viewHolderClickListener;
-
-        PixelViewHolder(View itemView, OnViewHolderClickListener listener) {
+        PixelViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
-            if (listener != null) {
-                viewHolderClickListener = listener;
-                pixelButton.setOnClickListener(this);
-            }
-        }
-
-        @Override
-        public void onClick(View v) {
-            int itemPos = getAdapterPosition();
-            viewHolderClickListener.onPixelClick(v, itemPos);
-        }
-
-        public interface OnViewHolderClickListener {
-            void onPixelClick(View caller, int position);
         }
     }
 }

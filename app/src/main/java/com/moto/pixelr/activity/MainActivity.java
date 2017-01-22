@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public void sendCommand1 ()
 	{
 		Global.cmd_key = 1;
-		Global.info = new byte[]{(byte) (100)};
+		Global.info = Constants.RAW_CMD_LED_OFF;
 		sendPixelCode();
 	}
 
@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public void sendCommand2 ()
 	{
 		Global.cmd_key = 1;
-		Global.info = new byte[]{(byte) (101)};
+		Global.info = Constants.RAW_CMD_LED_ON;
 		sendPixelCode();
 	}
 
@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public void sendCommand3 ()
 	{
 		Global.cmd_key = 1;
-		Global.info = new byte[]{(byte) (101)};
+		Global.info = Constants.RAW_CMD_BLINKY_2;
 		sendPixelCode();
 	}
 
