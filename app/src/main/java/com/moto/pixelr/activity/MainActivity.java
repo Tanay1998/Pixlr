@@ -896,6 +896,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				boxes[i] = (byte) Math.floor((mFFTPoints[i] + 2.5) / 5.0);
 				if (boxes[i] > 5) boxes[i] = 5;
 				if (boxes[i] < 0) boxes[i] = 0;
+				boxes[i] += 50; // Just coz we can.
 				s += String.valueOf(boxes[i]) + " x ";
 			}
 			Log.d("Visualizer Max", s);
