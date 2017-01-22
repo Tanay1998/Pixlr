@@ -147,6 +147,18 @@ public class PixelCodes {
                         0xff0000ff, 0xff0000ff, 0xff0000ff, 0xff0000ff, 0xff710b14, 0xff710b14, 0xff710b14, 0xff710b14
                 };
 
+            // DEBUG 0x00:
+            case 100:
+                return new int[]{0x00};
+
+            // DEBUG 0x01:
+            case 101:
+                return new int[]{0x01};
+
+            // DEBUG 0x02:
+            case 102:
+                return new int[]{0x02};
+
             // DEFAULT:
             default:
                 return new int[]{0x00};

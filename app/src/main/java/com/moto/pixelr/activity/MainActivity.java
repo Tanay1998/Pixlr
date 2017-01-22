@@ -139,82 +139,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	@OnClick(R.id.moto_command_button_1)
 	public void sendCommand1() {
-
-		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
-		serviceIntent.putExtra(RawPersonalityService.BLINKY, 0);
-
-		//isBlinkyFlashing = false;
-
-		// Sends a command to Blinky.
-		// TURN OFF BLINKY (IF CURRENTLY ON):
-//		if (isBlinkyFlashing) {
-//			serviceIntent.putExtra(RawPersonalityService.BLINKY,
-//					RawPersonalityService.BLINKY_OFF);
-//			isBlinkyFlashing = false;
-//		}
-//
-//		// TURN ON BLINKY (IF CURRENTLY OFF):
-//		else {
-//			serviceIntent.putExtra(RawPersonalityService.BLINKY, 1);
-//			isBlinkyFlashing = true;
-//		}
-//
-//		Log.d(MainActivity.class.getSimpleName(), "sendCommand(): isBlinking: " + isBlinkyFlashing);
-
-		/** Call RawPersonalityService to toggle LED */
-		startService(serviceIntent);
+		sendPixelCode(100);
 	}
 
 	@OnClick(R.id.moto_command_button_2)
 	public void sendCommand2() {
-
-		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
-		serviceIntent.putExtra(RawPersonalityService.BLINKY, 1);
-
-//		// Sends a command to Blinky.
-//		// TURN OFF BLINKY (IF CURRENTLY ON):
-//		if (isBlinkyFlashing) {
-//			serviceIntent.putExtra(RawPersonalityService.BLINKY,
-//					RawPersonalityService.BLINKY_OFF);
-//			isBlinkyFlashing = false;
-//		}
-//
-//		// TURN ON BLINKY (IF CURRENTLY OFF):
-//		else {
-//			serviceIntent.putExtra(RawPersonalityService.BLINKY,
-//					RawPersonalityService.BLINKY_ON);
-//			isBlinkyFlashing = true;
-//		}
-
-		/** Call RawPersonalityService to toggle LED */
-		startService(serviceIntent);
+		sendPixelCode(101);
 	}
 
 	@OnClick(R.id.moto_command_button_3)
 	public void sendCommand3() {
-
-		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
-		serviceIntent.putExtra(RawPersonalityService.BLINKY, 2);
-
-		// Sends a command to Blinky.
-		// TURN OFF BLINKY (IF CURRENTLY ON):
-//		if (isBlinkyFlashing) {
-//			serviceIntent.putExtra(RawPersonalityService.BLINKY,
-//					RawPersonalityService.BLINKY_OFF);
-//			isBlinkyFlashing = false;
-//		}
-//
-//		// TURN ON BLINKY (IF CURRENTLY OFF):
-//		else {
-//			serviceIntent.putExtra(RawPersonalityService.BLINKY,
-//					RawPersonalityService.BLINKY_ON);
-//			isBlinkyFlashing = true;
-//		}
-//
-//		Log.d(MainActivity.class.getSimpleName(), "sendCommand(): isBlinking: " + isBlinkyFlashing);
-
-		/** Call RawPersonalityService to toggle LED */
-		startService(serviceIntent);
+		sendPixelCode(102);
 	}
 
 	/**

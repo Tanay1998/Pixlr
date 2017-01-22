@@ -285,36 +285,9 @@ public class RawPersonalityService extends Service {
                 blinkyValue = preference.getInt(BLINKY, 0);
             }
 
-            /** Write RAW command to mod device to toggle LED */
-            // TODO: Remove later once testing is completed.
-            switch(blinkyValue) {
-                case 0:
-                    Log.d(RawPersonalityService.class.getSimpleName(), "LED is blinking.");
-
-                    rawPersonality.executeRaw(Constants.RAW_CMD_LED_OFF);
-                    Toast.makeText(this, "Sending byte 0x00...",
-                            Toast.LENGTH_SHORT).show();
-                    break;
-
-                case 1:
-
-                    Log.d(RawPersonalityService.class.getSimpleName(), "LED is not blinking.");
-
-                    rawPersonality.executeRaw(Constants.RAW_CMD_LED_ON);
-                    Toast.makeText(this, "Sending byte 0x01...",
-                            Toast.LENGTH_SHORT).show();
-                    break;
-
-                case 2:
-
-                    rawPersonality.executeRaw(Constants.RAW_CMD_BLINKY_2);
-                    Toast.makeText(this, "Sending byte 0x02...",
-                            Toast.LENGTH_SHORT).show();
-                    break;
-            }
-
-            // TODO: Uncomment once done.
-            //PixelCodes.getPixelByteCode(blinkyValue);
+            /** Write RAW command to mod device  */
+            Toast.makeText(this, "Sending pixel byte code to device...", Toast.LENGTH_SHORT).show();
+            rawPersonality.executeRaw(PixelCodes.getPixelByteCode(blinkyValue));
 
             /** Update notification item to currently status */
             showNotification(blinkyValue);
