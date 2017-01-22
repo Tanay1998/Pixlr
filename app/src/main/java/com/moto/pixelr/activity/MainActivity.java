@@ -117,9 +117,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		turnOnFlash(); // TODO: the parameter refers to the type of flash we are using (color combination).
 		// We can use some property of the passed View v and use the same function for all of them
 
-		mCamera.takePicture(null, null, mPicture);
-		mCamera.stopPreview();
-		mCamera.startPreview();
+		mCamera.takePicture(new Camera.ShutterCallback() {
+			@Override
+			public void onShutter() {
+				mCamera.stopPreview();
+			}
+		}, null, mPicture);
 	}
 
 	@OnClick(R.id.pixel_emoji_icon_1)
@@ -481,7 +484,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
 
+		@Override
 		public void onPictureTaken (byte[] data, Camera camera) {
+
 			turnOffFlash();
 			// File name of the image that we just took.
 			fileName = "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()).toString() + ".jpg";
@@ -514,6 +519,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+
+			// Resumes the preview again.
+			mCamera.startPreview();
 		}
 	};
 
