@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".activity.MainActivity"
-                android:id="@+id/main_layout" >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activity.MainActivity"
+    android:id="@+id/main_layout">
 
     <RelativeLayout
         android:id="@+id/camera_preview"
@@ -74,19 +75,20 @@
         android:text="F"/>
 
     <Button
-        android:layout_gravity="center|bottom"
-        android:id="@+id/ibCapture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:text="C"
-        android:gravity="center" />
-
-    <Button
         android:layout_gravity="bottom|right"
         android:text="Send Command"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/moto_command_button" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_gravity="center|bottom"
+        android:id="@+id/ibCapture"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_close_black_18dp"
+        android:textColor="@android:color/black"
+        android:gravity="center"
+        app:backgroundTint="@android:color/white"/>
 
 </FrameLayout>

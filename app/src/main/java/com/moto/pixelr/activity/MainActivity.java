@@ -27,10 +27,10 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.system.OsConstants;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -38,7 +38,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -95,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	// VIEW INJECTION VARIABLES
 	@BindView(R.id.camera_flash_seek_bar) SeekBar flashSeekBar;
 	@BindView(R.id.pixel_selector_recycler_view) RecyclerView pixelRecyclerView;
-	@BindView(R.id.ibCapture) Button ibCapture;
+	@BindView(R.id.ibCapture) FloatingActionButton ibCapture;
 
 	// CLICK METHODS
 	@OnClick(R.id.ibCapture)
@@ -104,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		// We can use some property of the passed View v and use the same function for all of them
 
 		mCamera.takePicture(null, null, mPicture);
+		mCamera.stopPreview();
+		mCamera.startPreview();
 	}
 
 	@OnClick(R.id.moto_command_button)
