@@ -71,7 +71,7 @@ import java.util.List;
 /**
  * A class to represent the main activity.
  */
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MotoActivity extends Activity implements View.OnClickListener {
     public static final String MOD_UID = "mod_uid";
 
     private static final int REQUEST_SELECT_FIRMWARE = 120;
@@ -102,7 +102,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     break;
                 case Personality.MSG_UPDATE_START:
                     /** Mod firmware update started */
-                    Toast.makeText(MainActivity.this,
+                    Toast.makeText(MotoActivity.this,
                             getString(R.string.firmware_update_started), Toast.LENGTH_SHORT).show();
                     break;
                 case Personality.MSG_UPDATE_DONE:
@@ -120,16 +120,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     }
 
                     if (result == FirmwarePersonality.FIRMWARE_UPDATE_SUCCESS) {
-                        Toast.makeText(MainActivity.this,
+                        Toast.makeText(MotoActivity.this,
                                 getString(R.string.firmware_update_succeed), Toast.LENGTH_SHORT).show();
                     } else {
                         if (OsConstants.errnoName(result) != null) {
-                            Toast.makeText(MainActivity.this,
+                            Toast.makeText(MotoActivity.this,
                                     getString(R.string.firmware_update_failed)
                                             + " - " + OsConstants.errnoName(result),
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(MainActivity.this,
+                            Toast.makeText(MotoActivity.this,
                                     getString(R.string.firmware_update_failed)
                                             + " - " + result,
                                     Toast.LENGTH_SHORT).show();
@@ -165,7 +165,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     finish();
                     break;
                 default:
-                    Log.i(Constants.TAG, "MainActivity - Un-handle events: " + msg.what);
+                    Log.i(Constants.TAG, "MotoActivity - Un-handle events: " + msg.what);
                     break;
             }
         }
@@ -224,7 +224,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
+                Intent serviceIntent = new Intent(MotoActivity.this, RawPersonalityService.class);
                 if (isChecked) {
                     serviceIntent.putExtra(RawPersonalityService.BLINKY,
                             RawPersonalityService.BLINKY_ON);
@@ -258,7 +258,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
 
         /** Start background service to check LED light status */
-        Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
+        Intent serviceIntent = new Intent(MotoActivity.this, RawPersonalityService.class);
         startService(serviceIntent);
     }
 
@@ -418,7 +418,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 }
                 break;
             default:
-                Log.e(Constants.TAG, "MainActivity onClick is not handled: " + v.getId());
+                Log.e(Constants.TAG, "MotoActivity onClick is not handled: " + v.getId());
                 break;
         }
     }
@@ -438,7 +438,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     + getString(R.string.firmware_security_exception);
                 break;
         }
-        Toast.makeText(MainActivity.this, reason, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MotoActivity.this, reason, Toast.LENGTH_SHORT).show();
     }
 
     /**

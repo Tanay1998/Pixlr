@@ -10,4 +10,6 @@
     <color name="mod_match">@android:color/holo_green_light</color>
     <color name="mod_mismatch">@android:color/tertiary_text_light</color>
     <color name="mod_na">@android:color/tertiary_text_light</color>
+
+    <color name="dark_transparent">#80000000</color>
 </resources>

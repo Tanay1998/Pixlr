@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".MotoActivity"
             android:screenOrientation="portrait">
 
             <!--<intent-filter>-->
@@ -50,17 +50,20 @@
             android:screenOrientation="portrait">
 
             <intent-filter>
+                <action android:name="com.moto.pixelr.PIXEL"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity android:name=".SelectorActivity">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!--<intent-filter>-->
-                <!--<action android:name="com.moto.pixelr.PIXEL"/>-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--</intent-filter>-->
-
-
         </activity>
+
     </application>
 
     <!--This uses the value from the version.xml file as the Moto Mods Services version.  This is used for future compatibility checks as Moto Mods capabilities expand.-->

@@ -43,7 +43,7 @@ public class PixelrActivity extends AppCompatActivity {
                     onModDevice(device);
                     break;
                 default:
-                    Log.i(PixelrActivity.class.getSimpleName(), "MainActivity - Un-handle events: " + msg.what);
+                    Log.i(PixelrActivity.class.getSimpleName(), "MotoActivity - Un-handle events: " + msg.what);
                     break;
             }
         }

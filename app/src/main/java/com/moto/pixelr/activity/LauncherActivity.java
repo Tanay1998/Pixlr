@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
-import com.moto.pixelr.MainActivity;
+
 import com.moto.pixelr.R;
 import com.motorola.mod.ModManager;
 import butterknife.BindView;

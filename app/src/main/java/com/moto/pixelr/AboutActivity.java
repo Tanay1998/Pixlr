@@ -31,7 +31,6 @@ package com.moto.pixelr;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toolbar;
@@ -59,7 +58,7 @@ public class AboutActivity extends Activity {
         String version = BuildConfig.VERSION_NAME;
         String uid = getString(R.string.na);
         if (getIntent() != null) {
-            uid = getIntent().getStringExtra(MainActivity.MOD_UID);
+            uid = getIntent().getStringExtra(MotoActivity.MOD_UID);
         }
 
         int required = getResources().getInteger(R.integer.moto_mod_services_version) / 1000;
