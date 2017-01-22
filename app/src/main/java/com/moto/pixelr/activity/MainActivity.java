@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			@Override
 			public void onShutter() {
 				mCamera.stopPreview();
+				mCamera.startPreview();
 			}
 		}, null, mPicture);
 	}
