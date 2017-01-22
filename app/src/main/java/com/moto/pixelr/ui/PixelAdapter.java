@@ -46,13 +46,13 @@ public class PixelAdapter extends RecyclerView.Adapter<PixelAdapter.PixelViewHol
             public void onPixelClick(View caller, int position) {
 
                 // MUSIC:
-                if (position == 1) {
+                if (position == 7) {
                     ((MainActivity) context).displayMusicOptions(true);
                     ((MainActivity) context).displayEmojiOptions(false);
                 }
 
                 // EMOJI:
-                else if (position == 2) {
+                else if (position == 0) {
                     ((MainActivity) context).displayEmojiOptions(true);
                     ((MainActivity) context).displayMusicOptions(false);
                 }

@@ -294,8 +294,9 @@ public class RawPersonalityService extends Service {
             rawPersonality.executeRaw(new byte[] {(byte)cmdValue});
 
             if (cmdValue == 1) {
+
                 // Send index value.
-                rawPersonality.executeRaw(new byte[]{(byte) blinkyValue});
+                rawPersonality.executeRaw(new byte[]{(byte) (blinkyValue + 1)});
             }
 
 //            // Send length of pixelByteCode.

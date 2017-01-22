@@ -3,6 +3,7 @@ package com.moto.pixelr.data;
 /**
  * Created by Michael Yoon Huh on 1/21/2017.
  *
+ * COMMAND KEY TABLE:
  * 1 = COMMAND
  * 2 = FRAME
  * 3 = CHARACTER STRING
