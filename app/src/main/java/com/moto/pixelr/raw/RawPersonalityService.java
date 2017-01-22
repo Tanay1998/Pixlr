@@ -43,7 +43,6 @@ import android.widget.Toast;
 import com.moto.pixelr.constants.Constants;
 import com.moto.pixelr.activity.MainActivity;
 import com.moto.pixelr.data.Global;
-import com.moto.pixelr.data.PixelCodes;
 import com.moto.pixelr.mods.Personality;
 import com.moto.pixelr.R;
 import com.motorola.mod.ModDevice;
@@ -269,7 +268,7 @@ public class RawPersonalityService extends Service {
             byte[] cmdValue = new byte[] {Global.cmd_key};
             byte[] blinkyValue = new byte[] {0};
             /** Write RAW command to mod device  */
-            Toast.makeText(this, "Sending pixel byte code to device...", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Sending pixel byte code to device...", Toast.LENGTH_SHORT).show();
 
             // Send command value.
             rawPersonality.executeRaw(cmdValue);

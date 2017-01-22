@@ -570,8 +570,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		// Setting the right parameters in the camera
 		Camera.Parameters params = mCamera.getParameters();
 
-		// Turn on flash.
-		params.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+		// Turn off flash.
+		params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
 
 		// Adjust focus mode.
 		params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
@@ -700,7 +700,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			{
 				Log.e(MainActivity.class.getSimpleName(), "Can't create directory to save image.");
 				Toast.makeText(MainActivity.this, "Can't create directory to save image.",
-						Toast.LENGTH_LONG).show();
+						Toast.LENGTH_SHORT).show();
 				return;
 			}
 
@@ -718,7 +718,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				fos.write(data);
 				fos.close();
 				Toast.makeText(MainActivity.this, "New Image saved:" + photoFile,
-						Toast.LENGTH_LONG).show();
+						Toast.LENGTH_SHORT).show();
 			}
 
 			catch (Exception error)
@@ -726,7 +726,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				Log.e(MainActivity.class.getSimpleName(), "File" + filename + "not saved: "
 						+ error.getMessage());
 				Toast.makeText(MainActivity.this, "Image could not be saved.",
-						Toast.LENGTH_LONG).show();
+						Toast.LENGTH_SHORT).show();
 			}
 
 			mCamera.stopPreview();

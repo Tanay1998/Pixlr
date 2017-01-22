@@ -77,7 +77,7 @@ public class PixelAdapter extends RecyclerView.Adapter<PixelAdapter.PixelViewHol
                 currentSelection = position;
 
                 // MUSIC:
-                if (position == 9) {
+                if (position == 10) {
                     ((MainActivity) context).displayMusicOptions(true);
                     ((MainActivity) context).displayEmojiOptions(false);
                 }
