@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,18 +21,26 @@ import android.hardware.SensorManager;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import com.moto.pixelr.ui.*;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 
-public class MainActivity extends Activity implements SensorEventListener
-{
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
+public class MainActivity extends Activity implements SensorEventListener {
+
 	private Camera mCamera;
 	private CameraPreview mPreview;
 	private SensorManager sensorManager = null;
@@ -45,6 +54,14 @@ public class MainActivity extends Activity implements SensorEventListener
 	private int degrees = -1;
 
 	public boolean isFlashOn = false;
+
+	private Unbinder unbinder;
+
+	@BindView(R.id.camera_flash_seek_bar)
+	SeekBar flashSeekBar;
+	@BindView(R.id.pixel_selector_recycler_view)
+	RecyclerView pixelRecyclerView;
+
 
 	public void turnOnFlash (int type)
 	{
@@ -79,6 +96,7 @@ public class MainActivity extends Activity implements SensorEventListener
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera);
+		unbinder = ButterKnife.bind(this);
 
 		// Setting all the path for the image
 		sdRoot = Environment.getExternalStorageDirectory();
@@ -105,6 +123,8 @@ public class MainActivity extends Activity implements SensorEventListener
 				mCamera.takePicture(null, null, mPicture);
 			}
 		});
+
+		initView();
 	}
 
 	private void createCamera ()
@@ -114,10 +134,22 @@ public class MainActivity extends Activity implements SensorEventListener
 
 		// Setting the right parameters in the camera
 		Camera.Parameters params = mCamera.getParameters();
-		params.setPictureSize(1600, 1200);
+
+		// Needed to determine maximum size supported by camera phone.
+		List<Camera.Size> allSizes = params.getSupportedPictureSizes();
+		Camera.Size size = allSizes.get(0); // get top size
+		for (int i = 0; i < allSizes.size(); i++) {
+			if (allSizes.get(i).width > size.width)
+				size = allSizes.get(i);
+		}
+
+		//set max Picture Size
+		params.setPictureSize(size.width, size.height);
+
 		params.setPictureFormat(PixelFormat.JPEG);
 		params.setJpegQuality(85);
 		mCamera.setParameters(params);
+		mCamera.setDisplayOrientation(90);
 
 		// Create our Preview view and set it as the content of our activity.
 		mPreview = new CameraPreview(this, mCamera);
@@ -127,8 +159,8 @@ public class MainActivity extends Activity implements SensorEventListener
 		// approach is not 100% perfect because on devices with a really small
 		// screen the the image will still be distorted - there is place for
 		// improvment.
-		//RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(preview.getWidth(), preview.getHeight());
-		//mPreview.setLayoutParams(layoutParams);
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+		mPreview.setLayoutParams(layoutParams);
 
 		// Adding the camera preview after the FrameLayout and before the button
 		// as a separated element.
@@ -173,6 +205,12 @@ public class MainActivity extends Activity implements SensorEventListener
 		// won't have the views on top of each other.
 		RelativeLayout preview = (RelativeLayout) findViewById(R.id.camera_preview);
 		preview.removeViewAt(0);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unbinder.unbind();
 	}
 
 	private void releaseCamera ()
@@ -228,6 +266,7 @@ public class MainActivity extends Activity implements SensorEventListener
 		catch (Exception e)
 		{
 			// Camera is not available (in use or does not exist)
+			Log.e(MainActivity.class.getSimpleName(), "getCameraInstance(): Camera instance was null.");
 		}
 
 		// returns null if camera is unavailable
@@ -376,4 +415,24 @@ public class MainActivity extends Activity implements SensorEventListener
 	public void onAccuracyChanged (Sensor sensor, int accuracy)
 	{
 	}
+
+
+	private void initView() {
+		initRecyclerView();
+		initSeekbar();
+	}
+
+	private void initRecyclerView() {
+		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+		layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+		pixelRecyclerView.setHasFixedSize(true);
+		pixelRecyclerView.setLayoutManager(layoutManager);
+		PixelAdapter pixelAdapter = new PixelAdapter(this);
+		pixelRecyclerView.setAdapter(pixelAdapter);
+	}
+
+	private void initSeekbar() {
+		flashSeekBar.setProgress(50); // Sets the progress bar at 50%.
+	}
+
 }
