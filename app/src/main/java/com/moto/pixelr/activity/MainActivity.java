@@ -7,8 +7,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import android.annotation.TargetApi;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
@@ -17,11 +20,17 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.system.OsConstants;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -30,14 +39,22 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-
+import android.widget.Switch;
+import android.widget.Toast;
+import com.moto.pixelr.Constants;
 import com.moto.pixelr.R;
+import com.moto.pixelr.mods.FirmwarePersonality;
+import com.moto.pixelr.mods.Personality;
+import com.moto.pixelr.raw.RawPersonalityService;
 import com.moto.pixelr.ui.CameraPreview;
 import com.moto.pixelr.ui.NoCamera;
 import com.moto.pixelr.ui.NoSDCard;
 import com.moto.pixelr.ui.PixelAdapter;
+import com.motorola.mod.ModDevice;
+import com.motorola.mod.ModManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -64,6 +81,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private static final String DIRECTORY_PATH = "/DCIM/Camera/";
 	private String fileName;
 
+	// MOTO MOD VARIABLES
+	public static final String MOD_UID = "mod_uid";
+	private static final int REQUEST_SELECT_FIRMWARE = 120;
+	private static final int REQUEST_RAW_PERMISSION = 121;
+	private FirmwarePersonality fwPersonality;
+	private List<Uri> pendingFirmware = null;
+	private boolean performUpdate = false;
+	private RawPersonalityService rawService;
+	private boolean isBlinkyFlashing = false;
+
 	// VIEW VARIABLES
 	private Unbinder unbinder;
 
@@ -81,33 +108,88 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		mCamera.takePicture(null, null, mPicture);
 	}
 
-	public void turnOnFlash (int type)
-	{
-		// Code to turn on Flash
-	}
+	@OnClick(R.id.moto_command_button)
+	public void sendCommand() {
 
-	public void turnOffFlash ()
-	{
-		// Code to turn off Flash
-	}
+		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
 
-
-	public void toggleFlash (View v)
-	{
-		isFlashOn = !isFlashOn;
-		if (isFlashOn)
-		{
-			Camera.Parameters p = mCamera.getParameters();
-			p.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-			mCamera.setParameters(p);
+		// Sends a command to Blinky.
+		// TURN OFF BLINKY (IF CURRENTLY ON):
+		if (isBlinkyFlashing) {
+			serviceIntent.putExtra(RawPersonalityService.BLINKY,
+					RawPersonalityService.BLINKY_OFF);
+			isBlinkyFlashing = false;
 		}
-		else
-		{
-			Camera.Parameters p = mCamera.getParameters();
-			p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-			mCamera.setParameters(p);
+
+		// TURN ON BLINKY (IF CURRENTLY OFF):
+		else {
+			serviceIntent.putExtra(RawPersonalityService.BLINKY,
+					RawPersonalityService.BLINKY_ON);
+			isBlinkyFlashing = true;
 		}
+
+		/** Call RawPersonalityService to toggle LED */
+		startService(serviceIntent);
 	}
+
+	/**
+	 * Handler for events from mod device
+	 */
+	private Handler handler = new Handler() {
+		@TargetApi(Build.VERSION_CODES.M)
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case Personality.MSG_MOD_DEVICE:
+					/** Mod attach/detach */
+					ModDevice device = fwPersonality.getModDevice();
+					onModDevice(device);
+					break;
+				case Personality.MSG_RAW_REQUEST_PERMISSION:
+					/** Request user to grant RAW protocol permission */
+					requestPermissions(new String[]{ModManager.PERMISSION_USE_RAW_PROTOCOL},
+							REQUEST_RAW_PERMISSION);
+					break;
+				case RawPersonalityService.BLINKY_STATUS:
+					/** The LED light status is changed */
+					Switch led = (Switch) findViewById(R.id.switch_led);
+					if (led != null) {
+						if ((rawService != null) &&
+								rawService.isRawInterfaceReady()) {
+							led.setChecked(rawService.isBlinking());
+							led.setEnabled(true);
+						} else {
+							led.setEnabled(false);
+							led.setChecked(false);
+						}
+					}
+					break;
+				case RawPersonalityService.EXIT_APP:
+					/** Exit main activity UI */
+					finish();
+					break;
+				default:
+					Log.i(Constants.TAG, "MainActivity - Un-handle events: " + msg.what);
+					break;
+			}
+		}
+	};
+
+	/**
+	 * Bind to the background service
+	 */
+	private ServiceConnection mConnection = new ServiceConnection() {
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			rawService = ((RawPersonalityService.LocalBinder) service).getService();
+			if (rawService != null) {
+				rawService.registerListener(handler);
+				rawService.checkRawInterface();
+			}
+		}
+
+		public void onServiceDisconnected(ComponentName className) {
+			rawService = null;
+		}
+	};
 
 	/** ACTIVITY LIFECYCLE METHODS _____________________________________________________________ **/
 
@@ -125,11 +207,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 		initDisplay();
 		initView();
+		initService();
 	}
 
 	@Override
 	protected void onResume () {
 		super.onResume();
+
+		initPersonality();
 
 		// Test if there is a camera on the device and if the SD card is
 		// mounted.
@@ -169,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	protected void onDestroy() {
 		super.onDestroy();
 		unbinder.unbind();
+		releasePersonality();
 	}
 
 	/** INITIALIZATION METHODS _________________________________________________________________ **/
@@ -197,6 +283,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	private void initSeekbar() {
 		flashSeekBar.setProgress(50); // Sets the progress bar at 50%.
+	}
+
+	/** Call RawPersonalityService to toggle LED */
+	private void initService() {
+		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
+		startService(serviceIntent);
 	}
 
 	/** CAMERA METHODS _________________________________________________________________________ **/
@@ -268,19 +360,40 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	 */
 	public static Camera getCameraInstance () {
 		Camera c = null;
-		try
-		{
+		try {
 			// attempt to get a Camera instance
 			c = Camera.open();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			// Camera is not available (in use or does not exist)
 			Log.e(MainActivity.class.getSimpleName(), "getCameraInstance(): Camera instance was null.");
 		}
 
 		// returns null if camera is unavailable
 		return c;
+	}
+
+	public void turnOnFlash (int type) {
+		// Code to turn on Flash
+	}
+
+	public void turnOffFlash () {
+		// Code to turn off Flash
+	}
+
+	public void toggleFlash (View v) {
+		isFlashOn = !isFlashOn;
+		if (isFlashOn)
+		{
+			Camera.Parameters p = mCamera.getParameters();
+			p.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+			mCamera.setParameters(p);
+		}
+		else
+		{
+			Camera.Parameters p = mCamera.getParameters();
+			p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+			mCamera.setParameters(p);
+		}
 	}
 
 	private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
@@ -406,6 +519,59 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		animation.setFillAfter(true);
 
 		return animation;
+	}
+
+	/** MOTO MOD METHODS _______________________________________________________________________ **/
+
+	private void initPersonality() {
+		if (null == fwPersonality) {
+			fwPersonality = new FirmwarePersonality(this);
+
+			/** Register handler to get event and data update */
+			fwPersonality.registerListener(handler);
+		}
+
+		if (null == rawService) {
+			bindService(new Intent(this,
+					RawPersonalityService.class), mConnection, Context.BIND_AUTO_CREATE);
+		}
+	}
+
+	private void releasePersonality() {
+		if (null != fwPersonality) {
+			fwPersonality.onDestroy();
+			fwPersonality = null;
+		}
+
+		if (null != rawService) {
+			unbindService(mConnection);
+			rawService = null;
+		}
+	}
+
+	/**
+	 * Mod device attach/detach
+	 */
+	public void onModDevice(ModDevice device) {
+		/** Request RAW permission for Blinky Personality Card, to create RAW I/O */
+		if (device != null) {
+			if ((device.getVendorId() == Constants.VID_MDK
+					&& device.getProductId() == Constants.PID_BLINKY)
+					|| device.getVendorId() == Constants.VID_DEVELOPER) {
+				checkRawPermission();
+			}
+		}
+	}
+
+	/**
+	 * Pre Android 6.0 permission police, need check and ask granting permissions
+	 */
+	@TargetApi(Build.VERSION_CODES.M)
+	public void checkRawPermission() {
+		if (checkSelfPermission(ModManager.PERMISSION_USE_RAW_PROTOCOL)
+				!= PackageManager.PERMISSION_GRANTED) {
+			handler.sendEmptyMessage(Personality.MSG_RAW_REQUEST_PERMISSION);
+		}
 	}
 
 	/** OVERRIDE METHODS _______________________________________________________________________ **/
