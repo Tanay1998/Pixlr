@@ -17,12 +17,27 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".MainActivity">
+
+            <intent-filter>
+                <action android:name="com.moto.pixelr.MAIN"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+
+        <activity android:name=".SelectorActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
     <!--This uses the value from the version.xml file as the Moto Mods Services version.  This is used for future compatibility checks as Moto Mods capabilities expand.-->
