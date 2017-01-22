@@ -502,7 +502,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 		// Turn on flash.
 		params.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-		//params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+
+		// Adjust focus mode.
+		params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 
 		// Needed to determine maximum size supported by camera phone.
 		List<Camera.Size> allSizes = params.getSupportedPictureSizes();
@@ -809,8 +811,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	 **/
 
 	public void sendPixelCode () {
-		Log.d(MainActivity.class.getSimpleName(), "sendPixelCode(): CMD_KEY: " + Global.cmd_key);
-		Log.d(MainActivity.class.getSimpleName(), "sendPixelCode(): INDEX: " + Global.info[0]);
+		//Log.d(MainActivity.class.getSimpleName(), "sendPixelCode(): CMD_KEY: " + Global.cmd_key);
+		//Log.d(MainActivity.class.getSimpleName(), "sendPixelCode(): INDEX: " + Global.info[0]);
 		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
 		startService(serviceIntent);
 	}

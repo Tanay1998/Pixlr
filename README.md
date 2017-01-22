@@ -17,6 +17,8 @@ Project Website: http://www.hackathon.io/projects/13688
 
 Event Website: http://modthefuture.com/
 
+YouTube Demo: https://youtu.be/Q6Lfkm0m628
+
 ## Description
 
 ThemLIGHTS is an Android application designed to with a custom Moto Mods LED module for the Moto Z smartphone. With the app running on a Moto Z with our custom Moto Mods LED module, users can display various animated LED graphics, texts, and brighter flash lights.
