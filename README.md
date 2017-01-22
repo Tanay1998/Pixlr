@@ -19,4 +19,6 @@ Event Website: http://modthefuture.com/
 
 ## Description
 
-ThemLIGHTS is a LED display mod for Moto Z. You can display various animated graphics, texts, and brighter flash lights using ThemLIGHTS smart LED display.
+ThemLIGHTS is an Android application designed to with a custom Moto Mods LED module for the Moto Z smartphone. With the app running on a Moto Z with our custom Moto Mods LED module, users can display various animated LED graphics, texts, and brighter flash lights.
+
+Powered by Arduino, the custom Moto Mods LED display module display changes based on the interaction from the ThemLIGHTS app.
