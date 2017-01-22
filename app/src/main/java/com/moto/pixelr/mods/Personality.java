@@ -1,9 +1,7 @@
-package com.moto.pixelr.mods;
-
 /**
  * Copyright (c) 2016 Motorola Mobility, LLC.
  * All rights reserved.
- *
+ * <p/>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 1. Redistributions of source code must retain the above copyright notice,
@@ -14,7 +12,7 @@ package com.moto.pixelr.mods;
  * 3. Neither the name of the copyright holder nor the names of its
  * contributors may be used to endorse or promote products derived from this
  * software without specific prior written permission.
- *
+ * <p/>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -27,6 +25,8 @@ package com.moto.pixelr.mods;
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+package com.moto.pixelr.mods;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -68,9 +68,7 @@ public class Personality {
      */
     List<Handler> listeners = new ArrayList<>();
 
-    /**
-     * Constructor
-     */
+    /** Constructor */
     public Personality(Context context) {
         this.context = context;
 
@@ -122,22 +120,6 @@ public class Personality {
     }
     // Personality common interface - End
 
-    // Personality Display interface - Begin
-    public Personality.Display getDisplay() {
-        return null;
-    }
-
-    public interface Display {
-        boolean setModDisplayState(boolean state);
-
-        boolean getModDisplayState();
-
-        boolean setModDisplayFollowState(boolean state);
-
-        boolean getModDisplayFollowState();
-    }
-    // Personality Display interface - End
-
     protected void notifyListeners(int what) {
         for (Handler handler : listeners) {
             handler.sendEmptyMessage(what);
@@ -160,9 +142,7 @@ public class Personality {
         }
     }
 
-    /**
-     * Bind with Moto Mod service
-     */
+    /** Bind with Moto Mod service */
     private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceConnected(ComponentName className,
@@ -188,9 +168,7 @@ public class Personality {
         }).start();
     }
 
-    /**
-     * Query and update mod device info
-     */
+    /** Query and update mod device info */
     protected void updateModList() {
         if (modManager == null) {
             onModDevice(null);
@@ -217,9 +195,7 @@ public class Personality {
         }
     }
 
-    /**
-     * Notify listeners the mod device info
-     */
+    /** Notify listeners the mod device info */
     public void onModDevice(ModDevice d) {
         modDevice = d;
         notifyListeners(MSG_MOD_DEVICE);
@@ -245,4 +221,3 @@ public class Personality {
         }
     }
 }
-

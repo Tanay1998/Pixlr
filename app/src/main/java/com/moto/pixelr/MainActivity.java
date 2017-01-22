@@ -58,6 +58,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.moto.pixelr.mods.FirmwarePersonality;
+import com.moto.pixelr.mods.Personality;
 import com.moto.pixelr.raw.RawPersonalityService;
 import com.motorola.mod.ModDevice;
 import com.motorola.mod.ModManager;

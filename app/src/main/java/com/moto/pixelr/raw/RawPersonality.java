@@ -43,7 +43,7 @@ import android.system.StructPollfd;
 import android.util.Log;
 
 import com.moto.pixelr.Constants;
-import com.moto.pixelr.Personality;
+import com.moto.pixelr.mods.Personality;
 import com.motorola.mod.ModDevice;
 import com.motorola.mod.ModInterfaceDelegation;
 import com.motorola.mod.ModManager;

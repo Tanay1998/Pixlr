@@ -26,7 +26,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.moto.pixelr;
+package com.moto.pixelr.mods;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,6 +35,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.util.Log;
 
+import com.moto.pixelr.Constants;
 import com.motorola.mod.ModManager;
 
 import java.util.List;
