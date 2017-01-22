@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activity.MainActivity"
     android:id="@+id/main_layout">
@@ -53,15 +52,45 @@
 
         </LinearLayout>
 
-        <!--<LinearLayout-->
-            <!--android:id="@+id/pixel_music_container"-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
+        <LinearLayout
+            android:id="@+id/pixel_emoji_container"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone">
 
-            <!---->
+            <ImageView
+                android:id="@+id/pixel_emoji_icon_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/emoji_pacman"
+                android:layout_weight="1" />
 
-        <!--</LinearLayout>-->
+            <ImageView
+                android:id="@+id/pixel_emoji_icon_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/emoji_excite"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/pixel_emoji_icon_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/emoji_happy"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/pixel_emoji_icon_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/emoji_sad"
+                android:layout_weight="1" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/camera_flash_seek_bar_container"

@@ -44,7 +44,16 @@ public class PixelAdapter extends RecyclerView.Adapter<PixelAdapter.PixelViewHol
 
             @Override
             public void onPixelClick(View caller, int position) {
-                ((MainActivity) context).sendPixelCode(position);
+
+                // EMOJI:
+                if (position == 2) {
+                    ((MainActivity) context).displayEmojiOptions(true);
+                }
+
+                else {
+                    ((MainActivity) context).displayEmojiOptions(false);
+                    ((MainActivity) context).sendPixelCode(position);
+                }
             }
 
         });

@@ -44,6 +44,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import com.moto.pixelr.Constants;
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	@BindView(R.id.ibCapture) FloatingActionButton ibCapture;
 	@BindView(R.id.pixel_selector_left_arrow) ImageView leftArrow;
 	@BindView(R.id.pixel_selector_right_arrow) ImageView rightArrow;
+	@BindView(R.id.pixel_emoji_container) LinearLayout emojiContainer;
 
 	// CLICK METHODS
 	@OnClick(R.id.ibCapture)
@@ -113,6 +115,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		mCamera.takePicture(null, null, mPicture);
 		mCamera.stopPreview();
 		mCamera.startPreview();
+	}
+
+	@OnClick(R.id.pixel_emoji_icon_1)
+	public void displayEmojiIcon1() {
+		sendPixelCode(2); // TODO: Change code later.
+	}
+
+	@OnClick(R.id.pixel_emoji_icon_2)
+	public void displayEmojiIcon2() {
+		sendPixelCode(2); // TODO: Change code later.
+	}
+
+	@OnClick(R.id.pixel_emoji_icon_3)
+	public void displayEmojiIcon3() {
+		sendPixelCode(2); // TODO: Change code later.
+	}
+
+	@OnClick(R.id.pixel_emoji_icon_4)
+	public void displayEmojiIcon4() {
+		sendPixelCode(2); // TODO: Change code later.
 	}
 
 	@OnClick(R.id.moto_command_button_1)
@@ -376,6 +398,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				}
 			}
 		});
+	}
+
+	public void displayEmojiOptions(boolean isShow) {
+
+		if (isShow) {
+			emojiContainer.setVisibility(View.VISIBLE);
+		} else {
+			emojiContainer.setVisibility(View.GONE);
+		}
 	}
 
 	/** CAMERA METHODS _________________________________________________________________________ **/
