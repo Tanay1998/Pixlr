@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	@BindView(R.id.pixel_selector_left_arrow) ImageView leftArrow;
 	@BindView(R.id.pixel_selector_right_arrow) ImageView rightArrow;
 	@BindView(R.id.pixel_emoji_container) LinearLayout emojiContainer;
+	@BindView(R.id.pixel_music_container) LinearLayout musicContainer;
 
 	// CLICK METHODS
 	@OnClick(R.id.ibCapture)
@@ -135,6 +136,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	@OnClick(R.id.pixel_emoji_icon_4)
 	public void displayEmojiIcon4() {
 		sendPixelCode(2); // TODO: Change code later.
+	}
+
+	@OnClick(R.id.pixel_music_1_container)
+	public void playMusic1() {
+
+	}
+
+	@OnClick(R.id.pixel_music_2_container)
+	public void playMusic2() {
+
+	}
+
+	@OnClick(R.id.pixel_music_3_container)
+	public void playMusic3() {
+
 	}
 
 	@OnClick(R.id.moto_command_button_1)
@@ -341,6 +357,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			emojiContainer.setVisibility(View.VISIBLE);
 		} else {
 			emojiContainer.setVisibility(View.GONE);
+		}
+	}
+
+	public void displayMusicOptions(boolean isShow) {
+
+		if (isShow) {
+			musicContainer.setVisibility(View.VISIBLE);
+		} else {
+			musicContainer.setVisibility(View.GONE);
 		}
 	}
 

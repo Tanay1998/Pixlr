@@ -135,8 +135,6 @@ public class PixelCodes {
                         0xffe912ff, 0xffe912ff, 0xffe912ff, 0xffe912ff, 0xffe912ff, 0xffe912ff, 0xffe912ff, 0xffe912ff
                 };
 
-
-
             // RED & WHITE:
             case 11:
                 return new int[]{
