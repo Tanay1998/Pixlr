@@ -42,6 +42,7 @@ import android.util.Log;
 import android.widget.Toast;
 import com.moto.pixelr.Constants;
 import com.moto.pixelr.activity.MainActivity;
+import com.moto.pixelr.data.PixelCodes;
 import com.moto.pixelr.mods.Personality;
 import com.moto.pixelr.R;
 import com.motorola.mod.ModDevice;
@@ -285,6 +286,7 @@ public class RawPersonalityService extends Service {
             }
 
             /** Write RAW command to mod device to toggle LED */
+            // TODO: Remove later once testing is completed.
             switch(blinkyValue) {
                 case 0:
                     Log.d(RawPersonalityService.class.getSimpleName(), "LED is blinking.");
@@ -310,6 +312,9 @@ public class RawPersonalityService extends Service {
                             Toast.LENGTH_SHORT).show();
                     break;
             }
+
+            // TODO: Uncomment once done.
+            //PixelCodes.getPixelByteCode(blinkyValue);
 
             /** Update notification item to currently status */
             showNotification(blinkyValue);

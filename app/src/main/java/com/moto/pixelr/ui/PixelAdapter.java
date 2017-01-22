@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.moto.pixelr.R;
+import com.moto.pixelr.activity.MainActivity;
 import com.moto.pixelr.data.PixelList;
 import com.moto.pixelr.model.Pixel;
 import com.squareup.picasso.Picasso;
@@ -43,7 +44,7 @@ public class PixelAdapter extends RecyclerView.Adapter<PixelAdapter.PixelViewHol
 
             @Override
             public void onPixelClick(View caller, int position) {
-                // TODO: Select pixel image action here.
+                ((MainActivity) context).sendPixelCode(position);
             }
 
         });

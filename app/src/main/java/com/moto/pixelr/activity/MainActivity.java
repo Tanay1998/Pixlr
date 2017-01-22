@@ -646,6 +646,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		}
 	}
 
+	/** PIXEL METHODS __________________________________________________________________________ **/
+
+	public void sendPixelCode(int position) {
+		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
+		serviceIntent.putExtra(RawPersonalityService.BLINKY, position);
+
+		/** Call RawPersonalityService to toggle LED */
+		startService(serviceIntent);
+	}
+
 	/** OVERRIDE METHODS _______________________________________________________________________ **/
 
 	/**
