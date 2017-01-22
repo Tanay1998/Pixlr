@@ -112,4 +112,9 @@
     <!-- description: [The Dip switch config description prompt] -->
     <string name="dip_description">All Dip configurations are \"Don\'t Care\" for this example.</string>
 
+    <string name="hello">Hello World, PhotoIntentActivity!</string>
+    <string name="questionmark">\?!</string>
+    <string name="explenation">Sorry, but i could not find a camera on your device.</string>
+    <string name="nosdcard">There is no SD card</string>
+
 </resources>

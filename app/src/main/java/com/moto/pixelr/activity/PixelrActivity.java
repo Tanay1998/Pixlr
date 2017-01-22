@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import com.moto.pixelr.R;
-import com.moto.pixelr.mods.DisplayPersonality;
+//import com.moto.pixelr.mods.DisplayPersonality;
 import com.moto.pixelr.mods.Personality;
 import com.motorola.mod.ModDevice;
 import butterknife.ButterKnife;
@@ -98,8 +98,8 @@ public class PixelrActivity extends AppCompatActivity {
 
             Log.d(PixelrActivity.class.getSimpleName(), "new personality created.");
 
-            personality = new DisplayPersonality(this);
-            personality.registerListener(handler);
+//            personality = new DisplayPersonality(this);
+//            personality.registerListener(handler);
         }
     }
 

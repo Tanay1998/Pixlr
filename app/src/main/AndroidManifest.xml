@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.moto.pixelr">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <!--This defines your application as using the Moto Mods feature for Play Store filtering.-->
     <uses-feature android:name="com.motorola.hardware.mods"/>
 
@@ -19,7 +23,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MotoActivity"
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
 
             <!--<intent-filter>-->
