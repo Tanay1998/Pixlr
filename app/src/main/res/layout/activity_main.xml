@@ -130,15 +130,17 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/debug_menu"
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|left"
+        android:gravity="center"
         android:layout_margin="4dp">
 
         <Button
             android:layout_gravity="bottom|right"
-            android:text="Send 0"
+            android:text="Send 0x00"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/moto_command_button_1"
@@ -146,7 +148,7 @@
 
         <Button
             android:layout_gravity="bottom|right"
-            android:text="Send 1"
+            android:text="Send 0x01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/moto_command_button_2"
@@ -154,10 +156,19 @@
 
         <Button
             android:layout_gravity="bottom|right"
-            android:text="Send 2"
+            android:text="Send 0x02"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/moto_command_button_3"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/ibFlash"
+            android:layout_gravity="center|bottom|left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="toggleFlash"
+            android:text="Flash"
             android:layout_marginBottom="8dp" />
 
     </LinearLayout>
@@ -171,15 +182,6 @@
         android:textColor="@android:color/black"
         android:gravity="center"
         app:backgroundTint="@android:color/white"
-        android:layout_marginBottom="8dp" />
-
-    <Button
-        android:id="@+id/ibFlash"
-        android:layout_gravity="center|bottom|left"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:onClick="toggleFlash"
-        android:text="F"
         android:layout_marginBottom="8dp" />
 
 </FrameLayout>
