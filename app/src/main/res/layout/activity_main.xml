@@ -11,8 +11,7 @@
         android:id="@+id/camera_preview"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:background="@android:color/holo_blue_dark">
-    </RelativeLayout>
+        android:background="@android:color/black" />
 
     <LinearLayout
         android:id="@+id/pixel_selector_container"

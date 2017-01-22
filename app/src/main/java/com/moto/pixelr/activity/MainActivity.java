@@ -1,9 +1,7 @@
 package com.moto.pixelr.activity;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -48,7 +46,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-
+import android.widget.Toast;
 import com.huhx0015.hxgselib.audio.HXGSEDolbyEffects;
 import com.huhx0015.hxgselib.audio.HXGSEMusicEngine;
 import com.moto.pixelr.constants.Constants;
@@ -104,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private static final int PERMISSIONS_CAMERA_REQUEST_CODE = 6775;
 	private static final int PERMISSIONS_RAW_PROTOCOL_CODE = 121;
 	private static final int PERMISSIONS_RECORD_AUDIO_CODE = 5360;
+	private static final int PERMISSIONS_WRITE_STORAGE_CODE = 55442;
 
 	// VIEW VARIABLES
 	private LinearLayoutManager layoutManager;
@@ -131,16 +130,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	// CLICK METHODS
 	@OnClick(R.id.ibCapture)
 	public void captureImage() {
-		turnOnFlash(); // TODO: the parameter refers to the type of flash we are using (color combination).
-		// We can use some property of the passed View v and use the same function for all of them
 
-		mCamera.takePicture(new Camera.ShutterCallback() {
-			@Override
-			public void onShutter() {
-				mCamera.stopPreview();
-				mCamera.startPreview();
-			}
-		}, null, mPicture);
+		// WRITE STORAGE PERMISSIONS:
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+			// Requests permission for camera.
+			ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
+					PERMISSIONS_WRITE_STORAGE_CODE);
+		} else {
+			turnOnFlash(); // TODO: the parameter refers to the type of flash we are using (color combination).
+			// We can use some property of the passed View v and use the same function for all of them
+			mCamera.takePicture(null, null, mPicture);
+		}
 	}
 
 	@OnClick(R.id.ibVisualizer)
@@ -479,7 +480,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 		// Adding the camera preview after the FrameLayout and before the button
 		// as a separated element.
-		preview.addView(mPreview, 0);
+		preview.addView(mPreview);
 	}
 
 	private void releaseCamera () {
@@ -548,42 +549,47 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		public void onPictureTaken (byte[] data, Camera camera) {
 
 			turnOffFlash();
-			// File name of the image that we just took.
-			fileName = "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()).toString() + ".jpg";
 
-			// Creating the directory where to save the image. Sadly in older
-			// version of Android we can not get the Media catalog name
-			File mkDir = new File(sdRoot, DIRECTORY_PATH);
-			mkDir.mkdirs();
+			File pictureFileDir = getDir();
 
-			// Main file where to save the data that we recive from the camera
-			File pictureFile = new File(sdRoot, DIRECTORY_PATH + fileName);
+			if (!pictureFileDir.exists() && !pictureFileDir.mkdirs()) {
+				Log.e(MainActivity.class.getSimpleName(), "Can't create directory to save image.");
+				Toast.makeText(MainActivity.this, "Can't create directory to save image.",
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyymmddhhmmss");
+			String date = dateFormat.format(new Date());
+			String photoFile = "Picture_" + date + ".jpg";
+
+			String filename = pictureFileDir.getPath() + File.separator + photoFile;
+
+			File pictureFile = new File(filename);
 
 			try {
-				FileOutputStream purge = new FileOutputStream(pictureFile);
-				purge.write(data);
-				purge.close();
-			} catch (FileNotFoundException e) {
-				Log.d("DG_DEBUG", "File not found: " + e.getMessage());
-			}
-			catch (IOException e) {
-				Log.d("DG_DEBUG", "Error accessing file: " + e.getMessage());
-			}
-
-			// Adding Exif data for the orientation. For some strange reason the
-			// ExifInterface class takes a string instead of a file.
-			try {
-				exif = new ExifInterface("/sdcard/" + DIRECTORY_PATH + fileName);
-				exif.setAttribute(ExifInterface.TAG_ORIENTATION, "" + orientation);
-				exif.saveAttributes();
-			} catch (IOException e) {
-				e.printStackTrace();
+				FileOutputStream fos = new FileOutputStream(pictureFile);
+				fos.write(data);
+				fos.close();
+				Toast.makeText(MainActivity.this, "New Image saved:" + photoFile,
+						Toast.LENGTH_LONG).show();
+			} catch (Exception error) {
+				Log.e(MainActivity.class.getSimpleName(), "File" + filename + "not saved: "
+						+ error.getMessage());
+				Toast.makeText(MainActivity.this, "Image could not be saved.",
+						Toast.LENGTH_LONG).show();
 			}
 
-			// Resumes the preview again.
+			mCamera.stopPreview();
 			mCamera.startPreview();
 		}
 	};
+
+	private File getDir() {
+		File sdDir = Environment
+				.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+		return new File(sdDir, getString(R.string.app_name));
+	}
 
 	/** I/O METHODS ____________________________________________________________________________ **/
 
@@ -886,6 +892,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 				alertDialog.setTitle("RECORD AUDIO Permissions Rejected");
 				alertDialog.setMessage("This app requires RECORD AUDIO permissions to function.");
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				alertDialog.show();
+			}
+		}
+
+		// WRITE STORAGE:
+		if (requestCode == PERMISSIONS_WRITE_STORAGE_CODE && grantResults.length > 0) {
+
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				// TODO: Do nothing, allow user to press photo button again.
+			} else {
+				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+				alertDialog.setTitle("WRITE STORAGE Permissions Rejected");
+				alertDialog.setMessage("This app requires WRITE STORAGE permissions to function.");
 				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
 
 					@Override
