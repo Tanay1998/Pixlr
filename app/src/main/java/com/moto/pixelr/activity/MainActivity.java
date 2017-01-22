@@ -48,6 +48,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+
+import com.huhx0015.hxgselib.audio.HXGSEDolbyEffects;
+import com.huhx0015.hxgselib.audio.HXGSEMusicEngine;
 import com.moto.pixelr.constants.Constants;
 import com.moto.pixelr.R;
 import com.moto.pixelr.mods.FirmwarePersonality;
@@ -67,6 +70,10 @@ import butterknife.Unbinder;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
 	/** CLASS VARIABLES ________________________________________________________________________ **/
+
+	// AUDIO VARIABLES
+	private String currentSong = "NONE"; // Sets the default song for the activity.
+	private boolean isPlaying = false; // Indicates that a song is currently playing in the background.
 
 	// CAMERA VARIABLES
 	private Camera mCamera;
@@ -178,17 +185,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	@OnClick(R.id.pixel_music_1_container)
 	public void playMusic1() {
-
+		currentSong = "AllOfTheLights";
+		HXGSEMusicEngine.getInstance().playSongName(currentSong, true, this);
+		isPlaying = true;
 	}
 
 	@OnClick(R.id.pixel_music_2_container)
 	public void playMusic2() {
-
+		currentSong = "SONG 1";
+		HXGSEMusicEngine.getInstance().playSongName(currentSong, true, this);
+		isPlaying = true;
 	}
 
 	@OnClick(R.id.pixel_music_3_container)
 	public void playMusic3() {
-
+		currentSong = "SONG 2";
+		HXGSEMusicEngine.getInstance().playSongName(currentSong, true, this);
+		isPlaying = true;
 	}
 
 	@OnClick(R.id.moto_command_button_1)
@@ -265,6 +278,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		// Getting the sensor service.
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
+		// AUDIO CLASS INITIALIZATION:
+		HXGSEMusicEngine.getInstance().initializeAudio(); // Initializes the HXGSEMusic class object.
+		HXGSEDolbyEffects.getInstance().initializeDolby(this); // Initializes the HXGSEDolby class object.
+
 		initDisplay();
 		initView();
 		initService();
@@ -303,11 +320,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 		// Register this class as a listener for the accelerometer sensor.
 		sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+
+		// Resumes audio playback if music was playing in the background.
+		if (isPlaying) {
+			HXGSEMusicEngine.getInstance().playSongName(currentSong, true, this);
+		}
 	}
 
 	@Override
 	protected void onPause () {
 		super.onPause();
+
+		HXGSEMusicEngine.getInstance().pauseSong(); // Pauses any song that is playing in the background.
 
 		// release the camera immediately on pause event
 		releaseCamera();
@@ -324,6 +348,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		unbinder.unbind();
 		releasePersonality();
 		releaseVisualizer();
+
+		// Releases all audio-related instances if the application is terminating.
+		HXGSEMusicEngine.getInstance().releaseMedia();
+		HXGSEDolbyEffects.getInstance().releaseDolbyEffects();
 	}
 
 	/** INITIALIZATION METHODS _________________________________________________________________ **/
@@ -737,6 +765,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private void releaseVisualizer() {
 		if (mVisualizer != null) {
 			mVisualizer.release();
+		}
+
+		// Stops the song that is currently playing in the background.
+		if (HXGSEMusicEngine.getInstance().isSongPlaying()) {
+			HXGSEMusicEngine.getInstance().stopSong();
+			currentSong = "NONE"; // Indicates no song has been selected.
 		}
 	}
 
