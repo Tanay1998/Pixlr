@@ -79,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private int deviceHeight;
 	private int orientation;
 
+	// INTENT VARIABLES
+	public static final String INTENT_VISUALIZER_SONG = "visualizer_song";
+
 	// I/O VARIABLES
 	private ExifInterface exif;
 	private File sdRoot;
@@ -92,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	// PERMISSIONS VARIABLE
 	private static final int PERMISSIONS_CAMERA_REQUEST_CODE = 6775;
 	private static final int PERMISSIONS_RAW_PROTOCOL_CODE = 121;
+	private static final int PERMISSIONS_RECORD_AUDIO_CODE = 5360;
 
 	// VIEW VARIABLES
 	private LinearLayoutManager layoutManager;
@@ -140,17 +144,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	@OnClick(R.id.pixel_music_1_container)
 	public void playMusic1() {
-
+		launchVisualizer(0);
 	}
 
 	@OnClick(R.id.pixel_music_2_container)
 	public void playMusic2() {
-
+		launchVisualizer(1);
 	}
 
 	@OnClick(R.id.pixel_music_3_container)
 	public void playMusic3() {
-
+		launchVisualizer(2);
 	}
 
 	@OnClick(R.id.moto_command_button_1)
@@ -666,6 +670,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		startService(serviceIntent);
 	}
 
+	/** INTENT METHODS _________________________________________________________________________ **/
+
+	private void launchVisualizer(int song) {
+
+		// CAMERA PERMISSIONS:
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+
+			// Requests permission for camera.
+			ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.RECORD_AUDIO },
+					PERMISSIONS_RECORD_AUDIO_CODE);
+		} else {
+			Intent visualizerIntent = new Intent(this, VisualizerActivity.class);
+			visualizerIntent.putExtra(INTENT_VISUALIZER_SONG, song);
+			startActivity(visualizerIntent);
+		}
+	}
+
 	/** OVERRIDE METHODS _______________________________________________________________________ **/
 
 	/**
@@ -701,8 +722,28 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				createCamera();
 			} else {
 				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-				alertDialog.setTitle("CAMERA PROTOCOL Permissions Rejected");
+				alertDialog.setTitle("CAMERA Permissions Rejected");
 				alertDialog.setMessage("This app requires CAMERA permissions to function.");
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				alertDialog.show();
+			}
+		}
+
+		// RECORD AUDIO:
+		if (requestCode == PERMISSIONS_RECORD_AUDIO_CODE && grantResults.length > 0) {
+
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				// TODO: Do nothing, allow user to make a choice.
+			} else {
+				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+				alertDialog.setTitle("RECORD AUDIO Permissions Rejected");
+				alertDialog.setMessage("This app requires RECORD AUDIO permissions to function.");
 				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
 
 					@Override
