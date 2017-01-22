@@ -327,4 +327,16 @@
         app:backgroundTint="@android:color/white"
         android:layout_marginBottom="8dp" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:layout_gravity="bottom|right"
+        android:id="@+id/ibVisualizer"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_equalizer_black_48px"
+        android:textColor="@android:color/black"
+        android:gravity="center"
+        app:backgroundTint="@android:color/white"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp" />
+
 </FrameLayout>

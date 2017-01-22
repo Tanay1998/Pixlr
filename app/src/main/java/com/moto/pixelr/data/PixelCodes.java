@@ -2,6 +2,11 @@ package com.moto.pixelr.data;
 
 /**
  * Created by Michael Yoon Huh on 1/21/2017.
+ *
+ * 1 = COMMAND
+ * 2 = FRAME
+ * 3 = CHARACTER STRING
+ * 4 = SOUND DATA
  */
 
 public class PixelCodes {
@@ -163,7 +168,7 @@ public class PixelCodes {
         }
     }
 
-    private static byte[] int2byte(int[]src) {
+    public static byte[] int2byte(int[]src) {
         int srcLength = src.length;
         byte[]dst = new byte[srcLength << 2];
 

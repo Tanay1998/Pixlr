@@ -23,6 +23,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.ExifInterface;
+import android.media.audiofx.Visualizer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -102,6 +103,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private PixelAdapter pixelAdapter;
 	private Unbinder unbinder;
 
+	// VISUALIZER VARIABLES
+	private boolean isVisualizerOn = false;
+	private int mDivisions = 8;
+	private double[] maxPts = new double[mDivisions];
+	private double[] mult = {1.0, 1.3, 1.7, 2.1, 2.5, 3.0, 4.5, 6.0};
+	private boolean mFlash = false;
+	private byte[] data;
+	private Visualizer mVisualizer;
+
 	// VIEW INJECTION VARIABLES
 	@BindView(R.id.camera_flash_seek_bar) SeekBar flashSeekBar;
 	@BindView(R.id.pixel_selector_recycler_view) RecyclerView pixelRecyclerView;
@@ -123,6 +133,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				mCamera.stopPreview();
 			}
 		}, null, mPicture);
+	}
+
+	@OnClick(R.id.ibVisualizer)
+	public void toggleVisualizer() {
+
+		// RECORD AUDIO PERMISSIONS:
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+
+			// Requests permission for record audio.
+			ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.RECORD_AUDIO },
+					PERMISSIONS_RECORD_AUDIO_CODE);
+		} else {
+
+			if (isVisualizerOn) {
+				releaseVisualizer();
+				isVisualizerOn = false;
+			} else {
+				initVisualizer();
+				isVisualizerOn = true;
+			}
+		}
 	}
 
 	@OnClick(R.id.pixel_emoji_icon_1)
@@ -147,17 +178,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	@OnClick(R.id.pixel_music_1_container)
 	public void playMusic1() {
-		launchVisualizer(0);
+
 	}
 
 	@OnClick(R.id.pixel_music_2_container)
 	public void playMusic2() {
-		launchVisualizer(1);
+
 	}
 
 	@OnClick(R.id.pixel_music_3_container)
 	public void playMusic3() {
-		launchVisualizer(2);
+
 	}
 
 	@OnClick(R.id.moto_command_button_1)
@@ -292,6 +323,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		super.onDestroy();
 		unbinder.unbind();
 		releasePersonality();
+		releaseVisualizer();
 	}
 
 	/** INITIALIZATION METHODS _________________________________________________________________ **/
@@ -386,7 +418,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		Camera.Parameters params = mCamera.getParameters();
 
 		// Turn on flash.
-		// TODO: Turn on later.
+		params.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
 		//params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
 
 		// Needed to determine maximum size supported by camera phone.
@@ -468,14 +500,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	public void toggleFlash (View v) {
 		isFlashOn = !isFlashOn;
-		if (isFlashOn)
-		{
+		if (isFlashOn) {
 			Camera.Parameters p = mCamera.getParameters();
 			p.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
 			mCamera.setParameters(p);
 		}
-		else
-		{
+
+		else {
 			Camera.Parameters p = mCamera.getParameters();
 			p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
 			mCamera.setParameters(p);
@@ -675,23 +706,91 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public void sendPixelCode(int position) {
 		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
 		serviceIntent.putExtra(RawPersonalityService.BLINKY, position);
+		serviceIntent.putExtra(RawPersonalityService.CMD_KEY, 1);
 		startService(serviceIntent);
 	}
 
-	/** INTENT METHODS _________________________________________________________________________ **/
+	/** VISUALIZER METHODS _____________________________________________________________________ **/
 
-	private void launchVisualizer(int song) {
+	private void initVisualizer() {
 
-		// CAMERA PERMISSIONS:
-		if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+		// Create the Visualizer object and attach it to our media player.
+		mVisualizer = new Visualizer(0);
 
-			// Requests permission for camera.
-			ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.RECORD_AUDIO },
-					PERMISSIONS_RECORD_AUDIO_CODE);
-		} else {
-			Intent visualizerIntent = new Intent(this, VisualizerActivity.class);
-			visualizerIntent.putExtra(INTENT_VISUALIZER_SONG, song);
-			startActivity(visualizerIntent);
+		// mVisualizer = new Visualizer(mediaPlayer.getAudioSessionId());
+		mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+
+		Visualizer.OnDataCaptureListener captureListener = new Visualizer.OnDataCaptureListener() {
+			@Override
+			public void onWaveFormDataCapture (Visualizer visualizer, byte[] bytes, int samplingRate) {}
+
+			@Override
+			public void onFftDataCapture (Visualizer visualizer, byte[] bytes, int samplingRate) {
+				updateVisualizerFFT(bytes);
+			}
+		};
+
+		mVisualizer.setDataCaptureListener(captureListener, Visualizer.getMaxCaptureRate() / 2, true, true);
+		mVisualizer.setEnabled(true);
+	}
+
+	private void releaseVisualizer() {
+		if (mVisualizer != null) {
+			mVisualizer.release();
+		}
+	}
+
+	public void updateVisualizerFFT(byte[] bytes) {
+		data = bytes;
+		draw();
+	}
+
+	// To use when changing songs
+	public void flash() {
+		mFlash = true;
+	}
+
+	public void draw () {
+
+		if (mFlash) {
+			mFlash = false;
+			// DRAW FLASH
+		}
+		else if (data != null)
+		{
+			double[] mFFTPoints = new double[mDivisions];
+			int length = data.length / mDivisions;
+
+			for (int i = 0; i < data.length; i += length)
+			{
+				int id = i / length;
+				int j = i;
+
+				for (j = i; j < data.length && j < i + length; j += 2)
+				{
+					byte rfk = data[j];
+					byte ifk = data[j + 1];
+					float magnitude = (rfk * rfk + ifk * ifk);
+					int dbValue = (int) (10 * Math.log10(magnitude));
+					mFFTPoints[id] += dbValue * 2;
+				}
+				mFFTPoints[id] /= (j - i);
+				maxPts[id] = (maxPts[id] > mFFTPoints[id]) ? maxPts[id] : mFFTPoints[id];
+			}
+
+			int[] boxes = new int[mDivisions];
+			String s = "";
+			for (int i = 0; i < mDivisions; i++)
+			{
+				mFFTPoints[i] = mFFTPoints[i] * mult[i];
+				boxes[i] = (int) Math.floor((mFFTPoints[i] + 2.5) / 5.0);
+				if (boxes[i] > 5) boxes[i] = 5;
+				if (boxes[i] < 0) boxes[i] = 0;
+				s += String.valueOf(boxes[i]) + " x ";
+			}
+			Log.d("Visualizer Max", s);
+			// DRAW FFT DATA
+
 		}
 	}
 
@@ -747,7 +846,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		if (requestCode == PERMISSIONS_RECORD_AUDIO_CODE && grantResults.length > 0) {
 
 			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				// TODO: Do nothing, allow user to make a choice.
+				initVisualizer();
 			} else {
 				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 				alertDialog.setTitle("RECORD AUDIO Permissions Rejected");

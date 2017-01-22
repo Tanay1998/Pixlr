@@ -59,6 +59,7 @@ public class RawPersonalityService extends Service {
     public static final int EXIT_APP = 101;
 
     public static final String BLINKY = "blinky";
+    public static final String CMD_KEY = "cmd_key";
     public static final String BLINKY_ON = "on";
     public static final String BLINKY_OFF = "off";
     public static final String CANCEL_NOTI = "cancel_notification";
@@ -116,17 +117,16 @@ public class RawPersonalityService extends Service {
         if (intent != null) {
             cancelNoti = intent.getBooleanExtra(CANCEL_NOTI, false);
             int blinky = intent.getIntExtra(BLINKY, 0);
-            //if (blinky != null && blinky.isEmpty() == false) {
-                //boolean blinking = blinky.equalsIgnoreCase(BLINKY_ON);
+            int cmd_key = intent.getIntExtra(CMD_KEY, 0);
 
-                if (rawPersonality != null
-                        && rawPersonality.getModDevice() != null
-                        && rawPersonality.getModDevice().getUniqueId() != null) {
-                    SharedPreferences preference = getSharedPreferences(
-                            rawPersonality.getModDevice().getUniqueId().toString(), MODE_PRIVATE);
-                    preference.edit().putInt(BLINKY, blinky).apply();
-                }
-            //}
+            if (rawPersonality != null
+                    && rawPersonality.getModDevice() != null
+                    && rawPersonality.getModDevice().getUniqueId() != null) {
+                SharedPreferences preference = getSharedPreferences(
+                        rawPersonality.getModDevice().getUniqueId().toString(), MODE_PRIVATE);
+                preference.edit().putInt(BLINKY, blinky).apply();
+                preference.edit().putInt(CMD_KEY, cmd_key).apply();
+            }
         }
 
         if (cancelNoti) {
@@ -277,17 +277,32 @@ public class RawPersonalityService extends Service {
     public void onRawInterfaceReady() {
         if (rawPersonality != null) {
             int blinkyValue = 0;
+            int cmdValue = 0;
             /** Get attached mod device UUID and check according LED record */
             if (rawPersonality.getModDevice() != null
                     && rawPersonality.getModDevice().getUniqueId() != null) {
                 SharedPreferences preference = getSharedPreferences(
                         rawPersonality.getModDevice().getUniqueId().toString(), MODE_PRIVATE);
                 blinkyValue = preference.getInt(BLINKY, 0);
+                cmdValue = preference.getInt(CMD_KEY, 0);
             }
 
             /** Write RAW command to mod device  */
             Toast.makeText(this, "Sending pixel byte code to device...", Toast.LENGTH_SHORT).show();
-            rawPersonality.executeRaw(PixelCodes.getPixelByteCode(blinkyValue));
+
+            // Send command value.
+            rawPersonality.executeRaw(new byte[] {(byte)cmdValue});
+
+            if (cmdValue == 1) {
+                // Send index value.
+                rawPersonality.executeRaw(new byte[]{(byte) blinkyValue});
+            }
+
+//            // Send length of pixelByteCode.
+//            rawPersonality.executeRaw(PixelCodes.int2byte(new int[] {pixelByteCode.length}));
+//
+//            // Send bytes of pixel.
+//            rawPersonality.executeRaw(pixelByteCode);
 
             /** Update notification item to currently status */
             showNotification(blinkyValue);
