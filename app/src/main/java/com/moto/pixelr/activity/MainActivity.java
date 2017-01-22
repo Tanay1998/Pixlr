@@ -918,16 +918,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		// mVisualizer = new Visualizer(mediaPlayer.getAudioSessionId());
 		mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
 
-		Visualizer.OnDataCaptureListener captureListener = new Visualizer.OnDataCaptureListener()
-		{
+		Visualizer.OnDataCaptureListener captureListener = new Visualizer.OnDataCaptureListener() {
 			@Override
-			public void onWaveFormDataCapture (Visualizer visualizer, byte[] bytes, int samplingRate)
-			{
-			}
+			public void onWaveFormDataCapture (Visualizer visualizer, byte[] bytes, int samplingRate) {}
 
 			@Override
-			public void onFftDataCapture (Visualizer visualizer, byte[] bytes, int samplingRate)
-			{
+			public void onFftDataCapture (Visualizer visualizer, byte[] bytes, int samplingRate) {
 				updateVisualizerFFT(bytes);
 			}
 		};
