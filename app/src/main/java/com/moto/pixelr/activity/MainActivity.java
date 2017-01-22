@@ -5,10 +5,8 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
 import android.Manifest;
-import android.annotatio
-n.TargetApi;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -49,7 +47,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
-
 import com.huhx0015.hxgselib.audio.HXGSEDolbyEffects;
 import com.huhx0015.hxgselib.audio.HXGSEMusicEngine;
 import com.moto.pixelr.constants.Constants;
@@ -154,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	@OnClick(R.id.ibCapture)
 	public void captureImage ()
 	{
-
 		// WRITE STORAGE PERMISSIONS:
 		if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
 		{
@@ -640,12 +636,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	public void turnOnFlash ()
 	{
-		// Code to turn on Flash using flashType
+		sendPixelCode();
 	}
 
 	public void turnOffFlash ()
 	{
-		// Code to turn off Flash
+		Global.cmd_key = 1;
+		Global.info = new byte[] {0};
+		sendPixelCode();
 	}
 
 	public void toggleFlash (View v)
@@ -901,8 +899,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	 * PIXEL METHODS __________________________________________________________________________
 	 **/
 
-	public void sendPixelCode ()
-	{
+	public void sendPixelCode () {
+		Log.d(MainActivity.class.getSimpleName(), "sendPixelCode(): CMD_KEY: " + Global.cmd_key);
+		Log.d(MainActivity.class.getSimpleName(), "sendPixelCode(): INDEX: " + Global.info[0]);
 		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
 		startService(serviceIntent);
 	}
@@ -911,8 +910,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	 * VISUALIZER METHODS _____________________________________________________________________
 	 **/
 
-	private void initVisualizer ()
-	{
+	private void initVisualizer () {
 
 		// Create the Visualizer object and attach it to our media player.
 		mVisualizer = new Visualizer(0);

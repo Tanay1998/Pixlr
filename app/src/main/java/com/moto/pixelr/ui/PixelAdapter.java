@@ -63,7 +63,7 @@ public class PixelAdapter extends RecyclerView.Adapter<PixelAdapter.PixelViewHol
                     ((MainActivity) context).displayEmojiOptions(false);
 	                Global.cmd_key = 1;
 	                Global.info = new byte[] {(byte)(position + 1)};
-	                ((MainActivity) context).sendPixelCode();
+	     //           ((MainActivity) context).sendPixelCode();
                 }
             }
 
