@@ -47,7 +47,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import com.moto.pixelr.Constants;
+import com.moto.pixelr.constants.Constants;
 import com.moto.pixelr.R;
 import com.moto.pixelr.mods.FirmwarePersonality;
 import com.moto.pixelr.mods.Personality;
@@ -380,7 +380,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		// Resizing the LinearLayout so we can make a proportional preview. This
 		// approach is not 100% perfect because on devices with a really small
 		// screen the the image will still be distorted - there is place for
-		// improvment.
+		// improvement.
 		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 		mPreview.setLayoutParams(layoutParams);
 
@@ -578,9 +578,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	/** MOTO MOD METHODS _______________________________________________________________________ **/
 
 	private void initPersonality() {
-
-		Log.d(MainActivity.class.getSimpleName(), "initPersonality(): Initializing Personality...");
-
 		if (null == fwPersonality) {
 			fwPersonality = new FirmwarePersonality(this);
 
@@ -589,9 +586,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		}
 
 		if (null == rawService) {
-
-			Log.d(MainActivity.class.getSimpleName(), "initPersonality(): Binding service.");
-
 			bindService(new Intent(this, RawPersonalityService.class), mConnection, Context.BIND_AUTO_CREATE);
 		}
 	}

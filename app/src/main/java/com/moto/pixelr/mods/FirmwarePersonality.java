@@ -34,10 +34,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.util.Log;
-
-import com.moto.pixelr.Constants;
+import com.moto.pixelr.constants.Constants;
 import com.motorola.mod.ModManager;
-
 import java.util.List;
 
 /**

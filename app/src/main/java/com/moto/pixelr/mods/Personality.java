@@ -38,11 +38,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
-
 import com.motorola.mod.IModManager;
 import com.motorola.mod.ModDevice;
 import com.motorola.mod.ModManager;
-
 import java.util.ArrayList;
 import java.util.List;
 

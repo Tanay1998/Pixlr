@@ -40,7 +40,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
-import com.moto.pixelr.Constants;
+import com.moto.pixelr.constants.Constants;
 import com.moto.pixelr.activity.MainActivity;
 import com.moto.pixelr.data.PixelCodes;
 import com.moto.pixelr.mods.Personality;

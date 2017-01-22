@@ -41,14 +41,12 @@ import android.system.Os;
 import android.system.OsConstants;
 import android.system.StructPollfd;
 import android.util.Log;
-
-import com.moto.pixelr.Constants;
+import com.moto.pixelr.constants.Constants;
 import com.moto.pixelr.mods.Personality;
 import com.motorola.mod.ModDevice;
 import com.motorola.mod.ModInterfaceDelegation;
 import com.motorola.mod.ModManager;
 import com.motorola.mod.ModProtocol;
-
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
