@@ -18,6 +18,8 @@
     <!--This permission (when granted by the user) allows this Application to access the Raw protocol.-->
     <uses-permission android:name="com.motorola.mod.permission.RAW_PROTOCOL" />
 
+    <supports-screens android:xlargeScreens="true"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,17 +31,25 @@
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait">
 
-            <!--<intent-filter>-->
-                <!--<action android:name="com.moto.pixelr.MAIN"/>-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--</intent-filter>-->
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
         </activity>
+
+        <receiver
+            android:name=".raw.BlinkyToggleReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.motomodsdev.intent.action.BLINKY_ON" />
+                <action android:name="com.motomodsdev.intent.action.BLINKY_OFF" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".raw.RawPersonalityService"
+            android:exported="false"></service>
 
     </application>
 

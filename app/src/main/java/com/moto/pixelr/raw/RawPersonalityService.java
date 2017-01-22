@@ -90,9 +90,13 @@ public class RawPersonalityService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Log.d(RawPersonalityService.class.getSimpleName(), "onCreate(): Service started.");
+
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         if (rawPersonality == null) {
+            Log.d(RawPersonalityService.class.getSimpleName(), "onCreate(): Initializing personality...");
             initPersonality();
         }
     }
@@ -210,6 +214,9 @@ public class RawPersonalityService extends Service {
     /** Initial Personality interface */
     private void initPersonality() {
         if (null == rawPersonality) {
+
+            Log.d(RawPersonalityService.class.getSimpleName(), "initPersonality(): Initializing personality.");
+
             /** For this example we expect to use MDK Blinky mod */
             rawPersonality = new RawPersonality(this, Constants.VID_MDK, Constants.PID_BLINKY);
 
@@ -229,6 +236,9 @@ public class RawPersonalityService extends Service {
     /** Handle mod events */
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
+
+            Log.d(RawPersonalityService.class.getSimpleName(), "Handler: Message: " + msg.what);
+
             switch (msg.what) {
                 case Personality.MSG_RAW_IO_READY:
                     /** The RAW I/O of attached mod device is created. */
@@ -278,10 +288,13 @@ public class RawPersonalityService extends Service {
 
             /** Write RAW command to mod device to toggle LED */
             if (blinking) {
+
+                Log.d(RawPersonalityService.class.getSimpleName(), "LED is blinking.");
                 rawPersonality.executeRaw(Constants.RAW_CMD_LED_ON);
                 Toast.makeText(this, getString(R.string.led_blinky),
                         Toast.LENGTH_SHORT).show();
             } else {
+                Log.d(RawPersonalityService.class.getSimpleName(), "LED is not blinking.");
                 rawPersonality.executeRaw(Constants.RAW_CMD_LED_OFF);
                 Toast.makeText(this, getString(R.string.led_off),
                         Toast.LENGTH_SHORT).show();

@@ -39,11 +39,9 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
-import android.widget.Toast;
 import com.moto.pixelr.Constants;
 import com.moto.pixelr.R;
 import com.moto.pixelr.mods.FirmwarePersonality;
@@ -127,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					RawPersonalityService.BLINKY_ON);
 			isBlinkyFlashing = true;
 		}
+
+		Log.d(MainActivity.class.getSimpleName(), "sendCommand(): isBlinking: " + isBlinkyFlashing);
 
 		/** Call RawPersonalityService to toggle LED */
 		startService(serviceIntent);
@@ -287,6 +287,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	/** Call RawPersonalityService to toggle LED */
 	private void initService() {
+
+		Log.d(MainActivity.class.getSimpleName(), "initService() called.");
+
 		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
 		startService(serviceIntent);
 	}
@@ -301,7 +304,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		Camera.Parameters params = mCamera.getParameters();
 
 		// Turn on flash.
-		params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+		// TODO: Turn on later.
+		//params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
 
 		// Needed to determine maximum size supported by camera phone.
 		List<Camera.Size> allSizes = params.getSupportedPictureSizes();
@@ -524,6 +528,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	/** MOTO MOD METHODS _______________________________________________________________________ **/
 
 	private void initPersonality() {
+
+		Log.d(MainActivity.class.getSimpleName(), "initPersonality(): Initializing Personality...");
+
 		if (null == fwPersonality) {
 			fwPersonality = new FirmwarePersonality(this);
 
@@ -532,6 +539,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		}
 
 		if (null == rawService) {
+
+			Log.d(MainActivity.class.getSimpleName(), "initPersonality(): Binding service.");
+
 			bindService(new Intent(this,
 					RawPersonalityService.class), mConnection, Context.BIND_AUTO_CREATE);
 		}
@@ -553,11 +563,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	 * Mod device attach/detach
 	 */
 	public void onModDevice(ModDevice device) {
+
+		Log.d(MainActivity.class.getSimpleName(), "onModeDevice() called.");
+
 		/** Request RAW permission for Blinky Personality Card, to create RAW I/O */
 		if (device != null) {
 			if ((device.getVendorId() == Constants.VID_MDK
 					&& device.getProductId() == Constants.PID_BLINKY)
 					|| device.getVendorId() == Constants.VID_DEVELOPER) {
+
+				Log.d(MainActivity.class.getSimpleName(), "onModeDevice(): Checking raw permissions.");
+
 				checkRawPermission();
 			}
 		}
@@ -575,6 +591,32 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	}
 
 	/** OVERRIDE METHODS _______________________________________________________________________ **/
+
+	/**
+	 * Handler the permission requesting result
+	 */
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		if (requestCode == REQUEST_RAW_PERMISSION
+				&& grantResults != null && grantResults.length > 0) {
+
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				Intent serviceIntent = new Intent(this, RawPersonalityService.class);
+				startService(serviceIntent);
+			} else {
+				// TODO: User declined for RAW accessing permission.
+				// You may need pop up a description dialog or other prompts to explain
+				// the app cannot work without the permission granted.
+
+				/** Disable LED control as no RAW permission, to write control command to it */
+				Switch led = (Switch) findViewById(R.id.switch_led);
+				if (led != null) {
+					led.setEnabled(false);
+					led.setChecked(false);
+				}
+			}
+		}
+	}
+
 	@Override
 	public void onAccuracyChanged (Sensor sensor, int accuracy) {}
 }
