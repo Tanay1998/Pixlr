@@ -7,9 +7,12 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -20,14 +23,16 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -80,14 +85,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private String fileName;
 
 	// MOTO MOD VARIABLES
-	public static final String MOD_UID = "mod_uid";
-	private static final int REQUEST_SELECT_FIRMWARE = 120;
-	private static final int REQUEST_RAW_PERMISSION = 121;
 	private FirmwarePersonality fwPersonality;
-	private List<Uri> pendingFirmware = null;
-	private boolean performUpdate = false;
 	private RawPersonalityService rawService;
-	private boolean isBlinkyFlashing = false;
+
+	// PERMISSIONS VARIABLE
+	private static final int PERMISSIONS_CAMERA_REQUEST_CODE = 6775;
+	private static final int PERMISSIONS_RAW_PROTOCOL_CODE = 121;
 
 	// VIEW VARIABLES
 	private LinearLayoutManager layoutManager;
@@ -207,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				case Personality.MSG_RAW_REQUEST_PERMISSION:
 					/** Request user to grant RAW protocol permission */
 					requestPermissions(new String[]{ModManager.PERMISSION_USE_RAW_PROTOCOL},
-							REQUEST_RAW_PERMISSION);
+							PERMISSIONS_RAW_PROTOCOL_CODE);
 					break;
 				case RawPersonalityService.EXIT_APP:
 					/** Exit main activity UI */
@@ -276,8 +279,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			finish();
 		}
 
-		// Creating the camera.
-		createCamera();
+		// CAMERA PERMISSIONS:
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+			// Requests permission for camera.
+			ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.CAMERA },
+					PERMISSIONS_CAMERA_REQUEST_CODE);
+		} else {
+			// Creating the camera.
+			createCamera();
+		}
 
 		// Register this class as a listener for the accelerometer sensor.
 		sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
@@ -335,10 +346,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	/** Call RawPersonalityService to toggle LED */
 	private void initService() {
 
-		Log.d(MainActivity.class.getSimpleName(), "initService() called.");
+		// RAW PROTOCOL PERMISSIONS:
+		if (ContextCompat.checkSelfPermission(this, ModManager.PERMISSION_USE_RAW_PROTOCOL) != PackageManager.PERMISSION_GRANTED) {
 
-		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
-		startService(serviceIntent);
+			// Requests permission for camera.
+			ActivityCompat.requestPermissions(this, new String[]{ ModManager.PERMISSION_USE_RAW_PROTOCOL },
+					PERMISSIONS_RAW_PROTOCOL_CODE);
+		} else {
+			Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
+			startService(serviceIntent);
+		}
 	}
 
 	private void initScrollListener() {
@@ -618,8 +635,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 			Log.d(MainActivity.class.getSimpleName(), "initPersonality(): Binding service.");
 
-			bindService(new Intent(this,
-					RawPersonalityService.class), mConnection, Context.BIND_AUTO_CREATE);
+			bindService(new Intent(this, RawPersonalityService.class), mConnection, Context.BIND_AUTO_CREATE);
 		}
 	}
 
@@ -669,11 +685,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	/** PIXEL METHODS __________________________________________________________________________ **/
 
 	public void sendPixelCode(int position) {
-		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
-		serviceIntent.putExtra(RawPersonalityService.BLINKY, position);
 
-		/** Call RawPersonalityService to toggle LED */
-		startService(serviceIntent);
+		// RAW PROTOCOL PERMISSIONS:
+		if (ContextCompat.checkSelfPermission(this, ModManager.PERMISSION_USE_RAW_PROTOCOL) != PackageManager.PERMISSION_GRANTED) {
+
+			// Requests permission for camera.
+			ActivityCompat.requestPermissions(this, new String[]{ ModManager.PERMISSION_USE_RAW_PROTOCOL },
+					PERMISSIONS_RAW_PROTOCOL_CODE);
+		} else {
+			Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
+			serviceIntent.putExtra(RawPersonalityService.BLINKY, position);
+			startService(serviceIntent);
+		}
 	}
 
 	/** OVERRIDE METHODS _______________________________________________________________________ **/
@@ -681,17 +704,46 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	/**
 	 * Handler the permission requesting result
 	 */
-	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-		if (requestCode == REQUEST_RAW_PERMISSION
-				&& grantResults != null && grantResults.length > 0) {
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+		// RAW PROTOCOL:
+		if (requestCode == PERMISSIONS_RAW_PROTOCOL_CODE && grantResults.length > 0) {
 
 			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				Intent serviceIntent = new Intent(this, RawPersonalityService.class);
 				startService(serviceIntent);
 			} else {
-				// TODO: User declined for RAW accessing permission.
-				// You may need pop up a description dialog or other prompts to explain
-				// the app cannot work without the permission granted.
+				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+				alertDialog.setTitle("RAW PROTOCOL Permissions Rejected");
+				alertDialog.setMessage("This app requires RAW PROTOCOL permissions to function.");
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				alertDialog.show();
+			}
+		}
+
+		// CAMERA PROTOCOL:
+		if (requestCode == PERMISSIONS_CAMERA_REQUEST_CODE && grantResults.length > 0) {
+
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				createCamera();
+			} else {
+				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+				alertDialog.setTitle("CAMERA PROTOCOL Permissions Rejected");
+				alertDialog.setMessage("This app requires CAMERA permissions to function.");
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				alertDialog.show();
 			}
 		}
 	}
