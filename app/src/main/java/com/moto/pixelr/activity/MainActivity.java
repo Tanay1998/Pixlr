@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		// removing the inserted view - so when we come back to the app we
 		// won't have the views on top of each other.
 		RelativeLayout preview = (RelativeLayout) findViewById(R.id.camera_preview);
-		preview.removeViewAt(0);
+		preview.removeAllViews();
 	}
 
 	@Override
@@ -345,17 +345,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	/** Call RawPersonalityService to toggle LED */
 	private void initService() {
-
-		// RAW PROTOCOL PERMISSIONS:
-		if (ContextCompat.checkSelfPermission(this, ModManager.PERMISSION_USE_RAW_PROTOCOL) != PackageManager.PERMISSION_GRANTED) {
-
-			// Requests permission for camera.
-			ActivityCompat.requestPermissions(this, new String[]{ ModManager.PERMISSION_USE_RAW_PROTOCOL },
-					PERMISSIONS_RAW_PROTOCOL_CODE);
-		} else {
-			Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
-			startService(serviceIntent);
-		}
+		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
+		startService(serviceIntent);
 	}
 
 	private void initScrollListener() {
@@ -685,18 +676,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	/** PIXEL METHODS __________________________________________________________________________ **/
 
 	public void sendPixelCode(int position) {
-
-		// RAW PROTOCOL PERMISSIONS:
-		if (ContextCompat.checkSelfPermission(this, ModManager.PERMISSION_USE_RAW_PROTOCOL) != PackageManager.PERMISSION_GRANTED) {
-
-			// Requests permission for camera.
-			ActivityCompat.requestPermissions(this, new String[]{ ModManager.PERMISSION_USE_RAW_PROTOCOL },
-					PERMISSIONS_RAW_PROTOCOL_CODE);
-		} else {
-			Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
-			serviceIntent.putExtra(RawPersonalityService.BLINKY, position);
-			startService(serviceIntent);
-		}
+		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
+		serviceIntent.putExtra(RawPersonalityService.BLINKY, position);
+		startService(serviceIntent);
 	}
 
 	/** OVERRIDE METHODS _______________________________________________________________________ **/
