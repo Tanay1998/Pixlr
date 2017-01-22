@@ -42,7 +42,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.moto.pixelr.Constants;
-import com.moto.pixelr.activity.MotoActivity;
+import com.moto.pixelr.activity.MainActivity;
 import com.moto.pixelr.mods.Personality;
 import com.moto.pixelr.R;
 import com.motorola.mod.ModDevice;
@@ -165,7 +165,7 @@ public class RawPersonalityService extends Service {
 
         /** Prepare notification item */
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MotoActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
         Notification.Builder notification = new Notification.Builder(this)
                 .setTicker(text)
                 .setContentTitle(getText(R.string.raw_service_label))
