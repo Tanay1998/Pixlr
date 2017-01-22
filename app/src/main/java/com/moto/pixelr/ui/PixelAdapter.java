@@ -77,13 +77,13 @@ public class PixelAdapter extends RecyclerView.Adapter<PixelAdapter.PixelViewHol
                 currentSelection = position;
 
                 // MUSIC:
-                if (position == 7) {
+                if (position == 9) {
                     ((MainActivity) context).displayMusicOptions(true);
                     ((MainActivity) context).displayEmojiOptions(false);
                 }
 
                 // EMOJI:
-                else if (position == 0) {
+                else if (position == 2) {
                     ((MainActivity) context).displayEmojiOptions(true);
                     ((MainActivity) context).displayMusicOptions(false);
                 }
@@ -92,7 +92,7 @@ public class PixelAdapter extends RecyclerView.Adapter<PixelAdapter.PixelViewHol
                     ((MainActivity) context).displayMusicOptions(false);
                     ((MainActivity) context).displayEmojiOptions(false);
                     Global.cmd_key = 1;
-                    Global.info = new byte[] {(byte)(position + 1)};
+                    Global.info = new byte[] {(byte)position};
                 }
 
                 notifyDataSetChanged();
