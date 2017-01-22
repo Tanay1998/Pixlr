@@ -40,8 +40,8 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
-                android:scaleType="centerInside" />
+                android:src="@drawable/lowlight"
+                android:scaleType="center" />
 
             <SeekBar
                 android:id="@+id/camera_flash_seek_bar"
@@ -57,13 +57,58 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center"
-                android:scaleType="centerInside"
-                android:src="?android:attr/actionModeSelectAllDrawable" />
+                android:scaleType="center"
+                android:src="@drawable/brightlight" />
 
         </LinearLayout>
 
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="4dp">
+
+        <Button
+            android:layout_gravity="bottom|right"
+            android:text="Send 0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/moto_command_button_1"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:layout_gravity="bottom|right"
+            android:text="Send 1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/moto_command_button_2"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:layout_gravity="bottom|right"
+            android:text="Send 2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/moto_command_button_3"
+            android:layout_marginBottom="8dp" />
+
+    </LinearLayout>
+
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_gravity="center|bottom"
+        android:id="@+id/ibCapture"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_photo_camera_black_48px"
+        android:textColor="@android:color/black"
+        android:gravity="center"
+        app:backgroundTint="@android:color/white"
+        android:layout_marginBottom="8dp" />
 
     <Button
         android:id="@+id/ibFlash"
@@ -72,23 +117,7 @@
         android:layout_height="50dp"
         android:layout_weight="1"
         android:onClick="toggleFlash"
-        android:text="F"/>
-
-    <Button
-        android:layout_gravity="bottom|right"
-        android:text="Send Command"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/moto_command_button" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_gravity="center|bottom"
-        android:id="@+id/ibCapture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_close_black_18dp"
-        android:textColor="@android:color/black"
-        android:gravity="center"
-        app:backgroundTint="@android:color/white"/>
+        android:text="F"
+        android:layout_marginBottom="8dp" />
 
 </FrameLayout>

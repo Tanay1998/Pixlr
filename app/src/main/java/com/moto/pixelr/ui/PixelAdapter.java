@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.moto.pixelr.R;
 import com.moto.pixelr.data.PixelList;
@@ -76,7 +76,7 @@ public class PixelAdapter extends RecyclerView.Adapter<PixelAdapter.PixelViewHol
 
     public static class PixelViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.pixel_icon) ImageButton pixelButton;
+        @BindView(R.id.pixel_icon) ImageView pixelButton;
         @BindView(R.id.pixel_description_text) TextView pixelText;
 
         public OnViewHolderClickListener viewHolderClickListener;

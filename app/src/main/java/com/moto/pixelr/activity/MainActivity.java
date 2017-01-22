@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private CameraPreview mPreview;
 	private SensorManager sensorManager = null;
 	public boolean isFlashOn = false;
+	public int flashType = 0;
 
 	// DEVICE VARIABLES
 	private int degrees = -1;
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	// CLICK METHODS
 	@OnClick(R.id.ibCapture)
 	public void captureImage() {
-		turnOnFlash(0); // TODO: the parameter refers to the type of flash we are using (color combination).
+		turnOnFlash(); // TODO: the parameter refers to the type of flash we are using (color combination).
 		// We can use some property of the passed View v and use the same function for all of them
 
 		mCamera.takePicture(null, null, mPicture);
@@ -107,27 +108,81 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		mCamera.startPreview();
 	}
 
-	@OnClick(R.id.moto_command_button)
-	public void sendCommand() {
+	@OnClick(R.id.moto_command_button_1)
+	public void sendCommand1() {
 
 		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
+		serviceIntent.putExtra(RawPersonalityService.BLINKY, 0);
+
+		//isBlinkyFlashing = false;
 
 		// Sends a command to Blinky.
 		// TURN OFF BLINKY (IF CURRENTLY ON):
-		if (isBlinkyFlashing) {
-			serviceIntent.putExtra(RawPersonalityService.BLINKY,
-					RawPersonalityService.BLINKY_OFF);
-			isBlinkyFlashing = false;
-		}
+//		if (isBlinkyFlashing) {
+//			serviceIntent.putExtra(RawPersonalityService.BLINKY,
+//					RawPersonalityService.BLINKY_OFF);
+//			isBlinkyFlashing = false;
+//		}
+//
+//		// TURN ON BLINKY (IF CURRENTLY OFF):
+//		else {
+//			serviceIntent.putExtra(RawPersonalityService.BLINKY, 1);
+//			isBlinkyFlashing = true;
+//		}
+//
+//		Log.d(MainActivity.class.getSimpleName(), "sendCommand(): isBlinking: " + isBlinkyFlashing);
 
-		// TURN ON BLINKY (IF CURRENTLY OFF):
-		else {
-			serviceIntent.putExtra(RawPersonalityService.BLINKY,
-					RawPersonalityService.BLINKY_ON);
-			isBlinkyFlashing = true;
-		}
+		/** Call RawPersonalityService to toggle LED */
+		startService(serviceIntent);
+	}
 
-		Log.d(MainActivity.class.getSimpleName(), "sendCommand(): isBlinking: " + isBlinkyFlashing);
+	@OnClick(R.id.moto_command_button_2)
+	public void sendCommand2() {
+
+		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
+		serviceIntent.putExtra(RawPersonalityService.BLINKY, 1);
+
+//		// Sends a command to Blinky.
+//		// TURN OFF BLINKY (IF CURRENTLY ON):
+//		if (isBlinkyFlashing) {
+//			serviceIntent.putExtra(RawPersonalityService.BLINKY,
+//					RawPersonalityService.BLINKY_OFF);
+//			isBlinkyFlashing = false;
+//		}
+//
+//		// TURN ON BLINKY (IF CURRENTLY OFF):
+//		else {
+//			serviceIntent.putExtra(RawPersonalityService.BLINKY,
+//					RawPersonalityService.BLINKY_ON);
+//			isBlinkyFlashing = true;
+//		}
+
+		/** Call RawPersonalityService to toggle LED */
+		startService(serviceIntent);
+	}
+
+	@OnClick(R.id.moto_command_button_3)
+	public void sendCommand3() {
+
+		Intent serviceIntent = new Intent(MainActivity.this, RawPersonalityService.class);
+		serviceIntent.putExtra(RawPersonalityService.BLINKY, 2);
+
+		// Sends a command to Blinky.
+		// TURN OFF BLINKY (IF CURRENTLY ON):
+//		if (isBlinkyFlashing) {
+//			serviceIntent.putExtra(RawPersonalityService.BLINKY,
+//					RawPersonalityService.BLINKY_OFF);
+//			isBlinkyFlashing = false;
+//		}
+//
+//		// TURN ON BLINKY (IF CURRENTLY OFF):
+//		else {
+//			serviceIntent.putExtra(RawPersonalityService.BLINKY,
+//					RawPersonalityService.BLINKY_ON);
+//			isBlinkyFlashing = true;
+//		}
+//
+//		Log.d(MainActivity.class.getSimpleName(), "sendCommand(): isBlinking: " + isBlinkyFlashing);
 
 		/** Call RawPersonalityService to toggle LED */
 		startService(serviceIntent);
@@ -377,8 +432,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		return c;
 	}
 
-	public void turnOnFlash (int type) {
-		// Code to turn on Flash
+	public void turnOnFlash () {
+		// Code to turn on Flash using flashType
 	}
 
 	public void turnOffFlash () {

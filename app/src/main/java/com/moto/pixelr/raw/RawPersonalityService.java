@@ -40,13 +40,11 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.moto.pixelr.Constants;
 import com.moto.pixelr.activity.MainActivity;
 import com.moto.pixelr.mods.Personality;
 import com.moto.pixelr.R;
 import com.motorola.mod.ModDevice;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,18 +114,18 @@ public class RawPersonalityService extends Service {
 
         if (intent != null) {
             cancelNoti = intent.getBooleanExtra(CANCEL_NOTI, false);
-            String blinky = intent.getStringExtra(BLINKY);
-            if (blinky != null && blinky.isEmpty() == false) {
-                boolean blinking = blinky.equalsIgnoreCase(BLINKY_ON);
+            int blinky = intent.getIntExtra(BLINKY, 0);
+            //if (blinky != null && blinky.isEmpty() == false) {
+                //boolean blinking = blinky.equalsIgnoreCase(BLINKY_ON);
 
                 if (rawPersonality != null
                         && rawPersonality.getModDevice() != null
                         && rawPersonality.getModDevice().getUniqueId() != null) {
                     SharedPreferences preference = getSharedPreferences(
                             rawPersonality.getModDevice().getUniqueId().toString(), MODE_PRIVATE);
-                    preference.edit().putBoolean(BLINKY, blinking).apply();
+                    preference.edit().putInt(BLINKY, blinky).apply();
                 }
-            }
+            //}
         }
 
         if (cancelNoti) {
@@ -156,10 +154,10 @@ public class RawPersonalityService extends Service {
     /**
      * Push the blinky status notification to status bar
      */
-    private void showNotification(boolean blinking) {
+    private void showNotification(int blinking) {
         /** Prepare text string for notification item */
         CharSequence text = getText(R.string.led_off);
-        if (blinking) {
+        if (blinking == 1) {
             text = getText(R.string.led_blinky);
         }
 
@@ -183,7 +181,7 @@ public class RawPersonalityService extends Service {
 
         /** Add the pendingIntent for notification action items */
         Intent led = new Intent(this, RawPersonalityService.class);
-        if (blinking) {
+        if (blinking == 1) {
             led.putExtra(RawPersonalityService.BLINKY, RawPersonalityService.BLINKY_OFF);
             PendingIntent pChangeIntent = PendingIntent.getService(this,
                     (int) System.currentTimeMillis(), led, 0);
@@ -277,31 +275,44 @@ public class RawPersonalityService extends Service {
     /** Restore blinky status to attached mod device */
     public void onRawInterfaceReady() {
         if (rawPersonality != null) {
-            boolean blinking = false;
+            int blinkyValue = 0;
             /** Get attached mod device UUID and check according LED record */
             if (rawPersonality.getModDevice() != null
                     && rawPersonality.getModDevice().getUniqueId() != null) {
                 SharedPreferences preference = getSharedPreferences(
                         rawPersonality.getModDevice().getUniqueId().toString(), MODE_PRIVATE);
-                blinking = preference.getBoolean(BLINKY, false);
+                blinkyValue = preference.getInt(BLINKY, 0);
             }
 
             /** Write RAW command to mod device to toggle LED */
-            if (blinking) {
+            switch(blinkyValue) {
+                case 0:
+                    Log.d(RawPersonalityService.class.getSimpleName(), "LED is blinking.");
 
-                Log.d(RawPersonalityService.class.getSimpleName(), "LED is blinking.");
-                rawPersonality.executeRaw(Constants.RAW_CMD_LED_ON);
-                Toast.makeText(this, getString(R.string.led_blinky),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                Log.d(RawPersonalityService.class.getSimpleName(), "LED is not blinking.");
-                rawPersonality.executeRaw(Constants.RAW_CMD_LED_OFF);
-                Toast.makeText(this, getString(R.string.led_off),
-                        Toast.LENGTH_SHORT).show();
+                    rawPersonality.executeRaw(Constants.RAW_CMD_LED_OFF);
+                    Toast.makeText(this, "Sending byte 0x00...",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+
+                case 1:
+
+                    Log.d(RawPersonalityService.class.getSimpleName(), "LED is not blinking.");
+
+                    rawPersonality.executeRaw(Constants.RAW_CMD_LED_ON);
+                    Toast.makeText(this, "Sending byte 0x01...",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+
+                case 2:
+
+                    rawPersonality.executeRaw(Constants.RAW_CMD_BLINKY_2);
+                    Toast.makeText(this, "Sending byte 0x02...",
+                            Toast.LENGTH_SHORT).show();
+                    break;
             }
 
             /** Update notification item to currently status */
-            showNotification(blinking);
+            showNotification(blinkyValue);
         }
 
         /** Notify UI LED status */
@@ -310,16 +321,16 @@ public class RawPersonalityService extends Service {
 
     /** Check currently LED status */
     public boolean isBlinking() {
-        boolean blinking = false;
+        int blinking = 0;
         if (rawPersonality != null
                 && rawPersonality.getModDevice() != null
                 && rawPersonality.getModDevice().getUniqueId() != null) {
             SharedPreferences preference = getSharedPreferences(
                     rawPersonality.getModDevice().getUniqueId().toString(), MODE_PRIVATE);
-            blinking = preference.getBoolean(BLINKY, false);
+            blinking = preference.getInt(BLINKY, 0);
         }
 
-        return blinking;
+        return (blinking == 1);
     }
 
     /** Check RAW I/O status */

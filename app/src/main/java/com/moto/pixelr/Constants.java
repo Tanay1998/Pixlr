@@ -34,15 +34,9 @@ public class Constants {
     public static final String TAG = "MDKUtility";
     public static final int INVALID_ID = -1;
 
-    public static String URL_PRIVACY_POLICY = "https://motorola.com/device-privacy";
-    public static String URL_DEV_PORTAL = "http://developer.motorola.com/build/examples/mdk-utility";
-    public static String URL_SOURCE_CODE = "https://github.com/MotorolaMobilityLLC/mdkutility";
-
-    public static byte[] RAW_CMD_LED_ON = {0x01};
     public static byte[] RAW_CMD_LED_OFF = {0x00};
-
-    public static final int MDK_MOD_DEVELOPER = 0;
-    public static final int MDK_MOD_EXAMPLE = 1;
+    public static byte[] RAW_CMD_LED_ON = {0x01};
+    public static byte[] RAW_CMD_BLINKY_2 = {0x02};
 
     public static final int VID_MDK = 0x00000312;
     public static final int VID_DEVELOPER = 0x00000042;
